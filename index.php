@@ -16,7 +16,12 @@ $usuario     = null;
 $progreso    = [];
 
 if ($autenticado) {
-    requerirRol('aprendiz'); // Sólo aprendices acceden aquí
+    /* Permitir solo aprendices — admin e instructor tienen su propio dashboard */
+    if (!in_array(obtenerRolSesion(), ['aprendiz'], true)) {
+        $rol = obtenerRolSesion();
+        if ($rol === 'admin')       redirigir('modulos/admin/dashboard.php');
+        elseif ($rol === 'instructor') redirigir('modulos/instructor/dashboard.php');
+    }
 
     $pdo  = obtenerConexion();
     $uid  = $_SESSION['usuario_id'];
@@ -90,7 +95,7 @@ function estadoRap(array $nivel, array $map, array $todos): string {
   <link rel="stylesheet" href="assets/css/estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* Estilos específicos del panel de aprendiz */
+    /* Estilos específicos del panel de aprendiz — tema claro Duolingo */
     .contenedor-aprendiz {
       display: flex;
       gap: 0;
@@ -305,7 +310,7 @@ function estadoRap(array $nivel, array $map, array $todos): string {
   <!-- ============ BARRA LATERAL ============ -->
   <nav class="barra-lateral" aria-label="Navegación principal">
     <div class="logo-app">
-      <div class="logo-icono">🏥</div>
+      <div class="logo-icono">🐧</div>
       <span class="logo-nombre">Smash<span>Code</span></span>
     </div>
 
