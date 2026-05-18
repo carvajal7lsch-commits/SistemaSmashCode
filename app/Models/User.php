@@ -17,18 +17,18 @@ class User extends Model {
      */
     public function obtenerPorCorreo(string $correo): ?array {
         $pdo = self::obtenerConexion();
-        $stmt = $pdo->prepare('SELECT id, nombre_completo, contrasena, rol, activo, bloqueado, intentos_fallidos FROM usuarios WHERE correo = ? LIMIT 1');
+        $stmt = $pdo->prepare('SELECT id, nombre_completo, contrasena, rol, activo, bloqueado, intentos_fallidos, debe_cambiar_clave FROM usuarios WHERE correo = ? LIMIT 1');
         $stmt->execute([$correo]);
         $usuario = $stmt->fetch();
         return $usuario ?: null;
     }
 
     /**
-     * Busca un usuario por su ID único.
+     * Busca un usuario por su ID único (incluyendo el flag de primer login).
      */
     public function obtenerPorId(string $id): ?array {
         $pdo = self::obtenerConexion();
-        $stmt = $pdo->prepare('SELECT nombre_completo, xp_puntos, nivel_perfil, rol, correo FROM usuarios WHERE id = ? LIMIT 1');
+        $stmt = $pdo->prepare('SELECT nombre_completo, xp_puntos, nivel_perfil, rol, correo, debe_cambiar_clave FROM usuarios WHERE id = ? LIMIT 1');
         $stmt->execute([$id]);
         $usuario = $stmt->fetch();
         return $usuario ?: null;
@@ -125,4 +125,17 @@ class User extends Model {
             return false;
         }
     }
+
+    /**
+     * HU09: Actualiza la contraseña de un instructor y limpia el flag debe_cambiar_clave.
+     * Se usa después del primer inicio de sesión con credenciales temporales.
+     */
+    public function actualizarContrasenaYLimpiarFlag(string $usuarioId, string $hashContrasena): bool {
+        $pdo  = self::obtenerConexion();
+        $stmt = $pdo->prepare(
+            'UPDATE usuarios SET contrasena = ?, debe_cambiar_clave = 0, intentos_fallidos = 0, bloqueado = 0 WHERE id = ?'
+        );
+        return $stmt->execute([$hashContrasena, $usuarioId]);
+    }
 }
+

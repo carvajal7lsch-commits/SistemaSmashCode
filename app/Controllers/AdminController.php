@@ -223,6 +223,118 @@ class AdminController extends Controller {
         $this->render('admin/usuario_actividad', compact('usuario', 'log', 'totalUsuarios'));
     }
 
+    /* ========================================================
+     * HU09 — Crear Cuentas de Instructor con Credenciales Temporales
+     * ======================================================== */
+
+    /**
+     * Muestra el formulario de alta de instructor con credenciales temporales.
+     */
+    public function crearInstructor(): void {
+        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $this->render('admin/instructor_form', [
+            'error'         => '',
+            'totalUsuarios' => $totalUsuarios,
+        ]);
+    }
+
+    /**
+     * Procesa la creación de un instructor:
+     *   1. Valida datos.
+     *   2. Genera contraseña temporal segura.
+     *   3. Guarda en BD con debe_cambiar_clave = 1.
+     *   4. Envía correo con las credenciales al instructor.
+     */
+    public function guardarInstructor(): void {
+        if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+            $this->redirect('admin/usuarios');
+        }
+
+        $nombre   = limpiar($_POST['nombre_completo'] ?? '');
+        $correo   = limpiar($_POST['correo'] ?? '');
+        $programa = limpiar($_POST['programa_asignado'] ?? '');
+        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+
+        // Validaciones básicas
+        $errores = [];
+        if (empty($nombre))                               $errores[] = 'El nombre es obligatorio.';
+        if (!filter_var($correo, FILTER_VALIDATE_EMAIL))  $errores[] = 'Correo inválido.';
+
+        if ($errores) {
+            $this->render('admin/instructor_form', [
+                'error'            => implode(' ', $errores),
+                'totalUsuarios'    => $totalUsuarios,
+                'datos'            => compact('nombre', 'correo', 'programa'),
+            ]);
+            return;
+        }
+
+        if ($this->usuarioModel->existeCorreo($correo)) {
+            $this->render('admin/instructor_form', [
+                'error'         => 'Ese correo ya está registrado en el sistema.',
+                'totalUsuarios' => $totalUsuarios,
+                'datos'         => compact('nombre', 'correo', 'programa'),
+            ]);
+            return;
+        }
+
+        // Generar contraseña temporal aleatoria de 12 caracteres
+        $claveTemp = $this->generarClaveTemp();
+        $hash = password_hash($claveTemp, PASSWORD_BCRYPT, ['cost' => 12]);
+        $id   = generarUUID();
+
+        $this->usuarioModel->crearInstructor($id, $nombre, $correo, $hash, $programa ?: null);
+
+        // Enviar credenciales al correo del instructor
+        $protocolp = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+        $urlLogin  = $protocolp . $_SERVER['HTTP_HOST'] . PROYECTO_PATH . '/login';
+
+        $asunto = '¡Bienvenido a SmashCode! Tus credenciales de acceso';
+        $cuerpo  = "<h2 style='color:#58CC02;'>¡Bienvenido(a) al equipo SmashCode!</h2>";
+        $cuerpo .= "<p>Hola <strong>" . htmlspecialchars($nombre) . "</strong>,</p>";
+        $cuerpo .= "<p>El administrador ha creado tu cuenta como <strong>Instructor</strong> en la plataforma SmashCode SENA.</p>";
+        $cuerpo .= "<table style='border-collapse:collapse; font-size:1rem; margin:16px 0;'>";
+        $cuerpo .= "<tr><td style='padding:8px 16px 8px 0; font-weight:600; color:#555;'>Correo:</td><td style='padding:8px 0; font-family:monospace;'>" . htmlspecialchars($correo) . "</td></tr>";
+        $cuerpo .= "<tr><td style='padding:8px 16px 8px 0; font-weight:600; color:#555;'>Contraseña temporal:</td><td style='padding:8px 0; font-family:monospace; font-size:1.2rem; letter-spacing:2px; background:#f4f4f4; padding:6px 12px; border-radius:4px;'>" . htmlspecialchars($claveTemp) . "</td></tr>";
+        if ($programa) {
+            $cuerpo .= "<tr><td style='padding:8px 16px 8px 0; font-weight:600; color:#555;'>Programa asignado:</td><td style='padding:8px 0;'>" . htmlspecialchars($programa) . "</td></tr>";
+        }
+        $cuerpo .= "</table>";
+        $cuerpo .= "<p>⚠️ <strong>Deberás cambiar esta contraseña en tu primer inicio de sesión.</strong></p>";
+        $cuerpo .= "<p><a href='{$urlLogin}' style='display:inline-block; background:#58CC02; color:#fff; padding:12px 28px; border-radius:24px; text-decoration:none; font-weight:700; font-size:1rem;'>Ingresar a SmashCode</a></p>";
+        $cuerpo .= "<hr><p style='font-size:0.8rem; color:#aaa;'>Si tienes algún problema para acceder, contacta al administrador del sistema.</p>";
+
+        if (file_exists(dirname(__DIR__, 2) . '/includes/correo.php')) {
+            require_once dirname(__DIR__, 2) . '/includes/correo.php';
+            enviarCorreo($correo, $asunto, $cuerpo);
+        }
+
+        $this->redirect('admin/usuarios?exito=instructor_creado');
+    }
+
+    /**
+     * Genera una contraseña temporal segura de 12 caracteres:
+     * garantiza al menos 1 mayúscula, 1 número y 1 símbolo.
+     */
+    private function generarClaveTemp(): string {
+        $mayus   = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+        $minuscu = 'abcdefghjkmnpqrstuvwxyz';
+        $numeros = '23456789';
+        $simbol  = '!@#$%&*?';
+
+        $clave  = $mayus[random_int(0, strlen($mayus) - 1)];
+        $clave .= $numeros[random_int(0, strlen($numeros) - 1)];
+        $clave .= $simbol[random_int(0, strlen($simbol) - 1)];
+
+        $todos = $mayus . $minuscu . $numeros;
+        for ($i = 0; $i < 9; $i++) {
+            $clave .= $todos[random_int(0, strlen($todos) - 1)];
+        }
+
+        // Mezclar caracteres aleatoriamente
+        return str_shuffle($clave);
+    }
+
     /* ======================================================== */
 
     /**

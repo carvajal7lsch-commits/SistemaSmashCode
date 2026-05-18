@@ -32,15 +32,22 @@
             <?= $total ?> usuario(s) encontrado(s) en total
           </p>
         </div>
-        <a href="<?= PROYECTO_PATH ?>/admin/usuarios/crear" class="btn btn-verde">
-          <i class="fas fa-user-plus"></i> Nuevo Usuario
-        </a>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="<?= PROYECTO_PATH ?>/admin/usuarios/crear" class="btn btn-verde" style="width:auto;">
+            <i class="fas fa-user-plus"></i> Nuevo Usuario
+          </a>
+          <a href="<?= PROYECTO_PATH ?>/admin/usuarios/instructor" class="btn btn-azul" style="width:auto;">
+            <i class="fas fa-chalkboard-teacher"></i> Nuevo Instructor
+          </a>
+        </div>
       </div>
 
       <!-- Alertas de éxito -->
       <?php $exito = $_GET['exito'] ?? ''; ?>
       <?php if ($exito === 'creado'): ?>
         <div class="alerta alerta-exito"><i class="fas fa-circle-check"></i> Usuario creado correctamente.</div>
+      <?php elseif ($exito === 'instructor_creado'): ?>
+        <div class="alerta alerta-exito"><i class="fas fa-chalkboard-teacher"></i> Cuenta de instructor creada. Se enviaron las credenciales temporales a su correo.</div>
       <?php elseif ($exito === 'actualizado'): ?>
         <div class="alerta alerta-exito"><i class="fas fa-circle-check"></i> Usuario actualizado correctamente.</div>
       <?php elseif ($exito === 'estado'): ?>

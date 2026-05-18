@@ -50,6 +50,14 @@ $app->post('/admin/usuarios/suspender', 'AdminController@suspenderUsuario');
 $app->post('/admin/usuarios/eliminar', 'AdminController@eliminarUsuario');
 $app->get('/admin/usuarios/actividad', 'AdminController@actividadUsuario');
 
+// --- Alta de Instructores (HU09) ---
+$app->get('/admin/usuarios/instructor', 'AdminController@crearInstructor');
+$app->post('/admin/usuarios/instructor/guardar', 'AdminController@guardarInstructor');
+
+// --- Cambio de Contraseña Forzado (primer login instructor) ---
+$app->get('/cambiar-clave', 'AuthController@showCambiarClave');
+$app->post('/cambiar-clave/guardar', 'AuthController@guardarCambiarClave');
+
 // ==============================================================
 
 // 5. Ejecutar la aplicación

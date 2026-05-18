@@ -133,6 +133,12 @@ class AuthController extends Controller {
                     $jwt = JWT::encode($payload, $secret_key, 'HS256');
                     $_SESSION['jwt_token'] = $jwt;
 
+                    // HU09: Si el instructor debe cambiar su clave en el primer login
+                    if (!empty($usuario['debe_cambiar_clave'])) {
+                        $this->redirect('cambiar-clave');
+                        return;
+                    }
+
                     $this->redirigirPorRol($usuario['rol']);
                 }
             }
@@ -402,5 +408,73 @@ class AuthController extends Controller {
         } else {
             $this->redirect('');
         }
+    }
+
+    /* ========================================================
+     * HU09 — Cambio de contraseña forzado (primer login)
+     * ======================================================== */
+
+    /**
+     * Muestra el formulario de cambio de contraseña obligatorio.
+     * Solo accesible si se está autenticado y la sesión tiene debe_cambiar_clave.
+     */
+    public function showCambiarClave(): void {
+        if (!estaAutenticado()) {
+            $this->redirect('login');
+        }
+
+        // Si el usuario no necesita cambiar clave, redirigir a su panel
+        $usuario = $this->userModel->obtenerPorId($_SESSION['usuario_id']);
+        if (!$usuario || empty($usuario['debe_cambiar_clave'])) {
+            $this->redirigirPorRol($_SESSION['rol']);
+        }
+
+        $this->render('auth/cambiar_clave', [
+            'error' => '',
+            'csrf'  => generarTokenCSRF(),
+        ]);
+    }
+
+    /**
+     * Procesa el cambio de contraseña forzado del instructor.
+     * Tras guardar exitosamente, limpia el flag debe_cambiar_clave.
+     */
+    public function guardarCambiarClave(): void {
+        if (!estaAutenticado()) {
+            $this->redirect('login');
+        }
+
+        $csrf = generarTokenCSRF();
+
+        if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+            $this->render('auth/cambiar_clave', [
+                'error' => 'Solicitud inválida. Recarga la página.',
+                'csrf'  => $csrf,
+            ]);
+            return;
+        }
+
+        $claveNueva   = $_POST['contrasena'] ?? '';
+        $claveConfirm = $_POST['contrasena_confirmar'] ?? '';
+
+        $errores = [];
+        if (strlen($claveNueva) < 8)                      $errores[] = 'Mín. 8 caracteres.';
+        if (!preg_match('/[A-Z]/', $claveNueva))          $errores[] = 'Al menos 1 mayúscula.';
+        if (!preg_match('/[0-9]/', $claveNueva))          $errores[] = 'Al menos 1 número.';
+        if ($claveNueva !== $claveConfirm)                $errores[] = 'Las contraseñas no coinciden.';
+
+        if ($errores) {
+            $this->render('auth/cambiar_clave', [
+                'error' => implode(' ', $errores),
+                'csrf'  => $csrf,
+            ]);
+            return;
+        }
+
+        $hash = password_hash($claveNueva, PASSWORD_BCRYPT, ['cost' => 12]);
+        $this->userModel->actualizarContrasenaYLimpiarFlag($_SESSION['usuario_id'], $hash);
+
+        // Redirigir al panel correspondiente con mensaje de éxito
+        $this->redirigirPorRol($_SESSION['rol']);
     }
 }
