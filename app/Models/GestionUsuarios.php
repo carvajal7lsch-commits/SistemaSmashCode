@@ -106,14 +106,14 @@ class GestionUsuarios extends Model {
      * Crea una cuenta de instructor con credenciales temporales.
      * Establece debe_cambiar_clave = 1 para forzar el cambio en el primer login.
      */
-    public function crearInstructor(string $id, string $nombre, string $correo, string $hash, ?string $programa): bool {
+    public function crearInstructor(string $id, string $nombre, string $correo, string $hash, ?string $programaId, ?string $ficha): bool {
         $pdo  = self::obtenerConexion();
         $stmt = $pdo->prepare(
             "INSERT INTO usuarios
-             (id, nombre_completo, correo, contrasena, rol, ficha_sena, activo, correo_verificado, debe_cambiar_clave)
-             VALUES (?, ?, ?, ?, 'instructor', ?, 1, 1, 1)"
+             (id, nombre_completo, correo, contrasena, rol, programa_id, ficha_sena, activo, correo_verificado, debe_cambiar_clave)
+             VALUES (?, ?, ?, ?, 'instructor', ?, ?, 1, 1, 1)"
         );
-        return $stmt->execute([$id, $nombre, $correo, $hash, $programa]);
+        return $stmt->execute([$id, $nombre, $correo, $hash, $programaId, $ficha]);
     }
 
     /**

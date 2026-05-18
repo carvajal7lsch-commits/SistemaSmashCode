@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\Admin;
 use App\Models\GestionUsuarios;
+use App\Models\Programa;
 
 /**
  * AdminController.php
@@ -14,11 +15,13 @@ class AdminController extends Controller {
 
     private Admin $adminModel;
     private GestionUsuarios $usuarioModel;
+    private Programa $programaModel;
 
     public function __construct() {
         parent::__construct();
         $this->adminModel   = new Admin();
         $this->usuarioModel = new GestionUsuarios();
+        $this->programaModel = new Programa();
         iniciarSesion();
 
         // Verificar rol administrador obligatoriamente
@@ -232,9 +235,12 @@ class AdminController extends Controller {
      */
     public function crearInstructor(): void {
         $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $programas     = $this->programaModel->obtenerTodos();
         $this->render('admin/instructor_form', [
             'error'         => '',
             'totalUsuarios' => $totalUsuarios,
+            'programas'     => $programas,
+            'datos'         => [],
         ]);
     }
 
@@ -250,10 +256,12 @@ class AdminController extends Controller {
             $this->redirect('admin/usuarios');
         }
 
-        $nombre   = limpiar($_POST['nombre_completo'] ?? '');
-        $correo   = limpiar($_POST['correo'] ?? '');
-        $programa = limpiar($_POST['programa_asignado'] ?? '');
+        $nombre     = limpiar($_POST['nombre_completo'] ?? '');
+        $correo     = limpiar($_POST['correo'] ?? '');
+        $programaId = limpiar($_POST['programa_id'] ?? '');
+        $ficha      = limpiar($_POST['ficha_sena'] ?? '');
         $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $programas     = $this->programaModel->obtenerTodos();
 
         // Validaciones básicas
         $errores = [];
@@ -262,9 +270,10 @@ class AdminController extends Controller {
 
         if ($errores) {
             $this->render('admin/instructor_form', [
-                'error'            => implode(' ', $errores),
-                'totalUsuarios'    => $totalUsuarios,
-                'datos'            => compact('nombre', 'correo', 'programa'),
+                'error'         => implode(' ', $errores),
+                'totalUsuarios' => $totalUsuarios,
+                'programas'     => $programas,
+                'datos'         => compact('nombre', 'correo', 'programaId', 'ficha'),
             ]);
             return;
         }
@@ -273,7 +282,8 @@ class AdminController extends Controller {
             $this->render('admin/instructor_form', [
                 'error'         => 'Ese correo ya está registrado en el sistema.',
                 'totalUsuarios' => $totalUsuarios,
-                'datos'         => compact('nombre', 'correo', 'programa'),
+                'programas'     => $programas,
+                'datos'         => compact('nombre', 'correo', 'programaId', 'ficha'),
             ]);
             return;
         }
@@ -283,11 +293,22 @@ class AdminController extends Controller {
         $hash = password_hash($claveTemp, PASSWORD_BCRYPT, ['cost' => 12]);
         $id   = generarUUID();
 
-        $this->usuarioModel->crearInstructor($id, $nombre, $correo, $hash, $programa ?: null);
+        $this->usuarioModel->crearInstructor($id, $nombre, $correo, $hash, $programaId ?: null, $ficha ?: null);
 
         // Enviar credenciales al correo del instructor
         $protocolp = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
         $urlLogin  = $protocolp . $_SERVER['HTTP_HOST'] . PROYECTO_PATH . '/login';
+
+        // Resolver nombre del programa para el correo
+        $nombrePrograma = '';
+        if ($programaId) {
+            foreach ($programas as $p) {
+                if ($p['id'] === $programaId) {
+                    $nombrePrograma = $p['nombre'];
+                    break;
+                }
+            }
+        }
 
         $asunto = '¡Bienvenido a SmashCode! Tus credenciales de acceso';
         $cuerpo  = "<h2 style='color:#58CC02;'>¡Bienvenido(a) al equipo SmashCode!</h2>";
@@ -296,8 +317,11 @@ class AdminController extends Controller {
         $cuerpo .= "<table style='border-collapse:collapse; font-size:1rem; margin:16px 0;'>";
         $cuerpo .= "<tr><td style='padding:8px 16px 8px 0; font-weight:600; color:#555;'>Correo:</td><td style='padding:8px 0; font-family:monospace;'>" . htmlspecialchars($correo) . "</td></tr>";
         $cuerpo .= "<tr><td style='padding:8px 16px 8px 0; font-weight:600; color:#555;'>Contraseña temporal:</td><td style='padding:8px 0; font-family:monospace; font-size:1.2rem; letter-spacing:2px; background:#f4f4f4; padding:6px 12px; border-radius:4px;'>" . htmlspecialchars($claveTemp) . "</td></tr>";
-        if ($programa) {
-            $cuerpo .= "<tr><td style='padding:8px 16px 8px 0; font-weight:600; color:#555;'>Programa asignado:</td><td style='padding:8px 0;'>" . htmlspecialchars($programa) . "</td></tr>";
+        if ($ficha) {
+            $cuerpo .= "<tr><td style='padding:8px 16px 8px 0; font-weight:600; color:#555;'>Ficha SENA:</td><td style='padding:8px 0;'>" . htmlspecialchars($ficha) . "</td></tr>";
+        }
+        if ($nombrePrograma) {
+            $cuerpo .= "<tr><td style='padding:8px 16px 8px 0; font-weight:600; color:#555;'>Programa asignado:</td><td style='padding:8px 0;'>" . htmlspecialchars($nombrePrograma) . "</td></tr>";
         }
         $cuerpo .= "</table>";
         $cuerpo .= "<p>⚠️ <strong>Deberás cambiar esta contraseña en tu primer inicio de sesión.</strong></p>";

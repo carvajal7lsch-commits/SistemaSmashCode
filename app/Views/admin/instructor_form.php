@@ -81,17 +81,37 @@
               <span class="ayuda-campo">Se enviará la contraseña temporal a este correo.</span>
             </div>
 
+            <!-- Ficha SENA -->
+            <div class="grupo-campo">
+              <label class="etiqueta-campo" for="ficha_sena">
+                Ficha SENA <span style="color:var(--gris-medio); font-weight:400;">(Opcional)</span>
+              </label>
+              <div class="contenedor-input">
+                <i class="fas fa-id-card icono-input"></i>
+                <input type="text" id="ficha_sena" name="ficha_sena" class="campo-input"
+                       placeholder="Ej: 2877650" maxlength="20"
+                       value="<?= htmlspecialchars($datos['ficha'] ?? '') ?>">
+              </div>
+            </div>
+
             <!-- Programa Asignado -->
             <div class="grupo-campo">
-              <label class="etiqueta-campo" for="programa_asignado">
+              <label class="etiqueta-campo" for="programa_id">
                 Programa Asignado <span style="color:var(--gris-medio); font-weight:400;">(Opcional)</span>
               </label>
               <div class="contenedor-input">
-                <i class="fas fa-laptop-code icono-input"></i>
-                <input type="text" id="programa_asignado" name="programa_asignado" class="campo-input"
-                       placeholder="Ej: Análisis y Desarrollo de Software"
-                       value="<?= htmlspecialchars($datos['programa'] ?? '') ?>">
+                <i class="fas fa-graduation-cap icono-input"></i>
+                <select id="programa_id" name="programa_id" class="campo-input" style="padding-left:38px; cursor:pointer;">
+                  <option value="">— Sin programa asignado —</option>
+                  <?php foreach ($programas as $p): ?>
+                    <option value="<?= limpiar($p['id']) ?>"
+                      <?= ($datos['programaId'] ?? '') === $p['id'] ? 'selected' : '' ?>>
+                      <?= limpiar($p['nombre']) ?>
+                    </option>
+                  <?php endforeach; ?>
+                </select>
               </div>
+              <span class="ayuda-campo">Programa de formación SENA al que el instructor estará asignado.</span>
             </div>
 
             <!-- Info contraseña -->
