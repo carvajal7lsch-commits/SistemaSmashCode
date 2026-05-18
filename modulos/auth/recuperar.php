@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Enlace (ajustar protocolo/host en producción)
                 $protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-                $enlace = $protocolo . $_SERVER['HTTP_HOST'] . "/proyecto_smashcode/modulos/auth/restablecer.php?token=" . $token_string;
+                $enlace = $protocolo . $_SERVER['HTTP_HOST'] . PROYECTO_PATH . "/modulos/auth/restablecer.php?token=" . $token_string;
 
                 $cuerpo = "<h1>Recuperación de Contraseña</h1>";
                 $cuerpo .= "<p>Hola " . limpiar($usuario['nombre_completo']) . ",</p>";

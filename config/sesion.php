@@ -69,7 +69,7 @@ function estaAutenticado(): bool {
  */
 function requerirAutenticacion(): void {
     if (!estaAutenticado()) {
-        header('Location: /proyecto_smashcode/modulos/auth/login.php');
+        header('Location: ' . PROYECTO_PATH . '/modulos/auth/login.php');
         exit;
     }
 }
@@ -83,7 +83,7 @@ function requerirRol($roles): void {
     $roles = (array) $roles;
     if (!in_array($_SESSION['rol'] ?? '', $roles, true)) {
         http_response_code(403);
-        header('Location: /proyecto_smashcode/index.php?error=acceso_denegado');
+        header('Location: ' . PROYECTO_PATH . '/index.php?error=acceso_denegado');
         exit;
     }
 }

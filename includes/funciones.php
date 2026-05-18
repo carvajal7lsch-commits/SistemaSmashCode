@@ -51,7 +51,7 @@ function generarUUID(): string {
  * @param string $ruta Ruta relativa
  */
 function redirigir(string $ruta): void {
-    header('Location: /proyecto_smashcode/' . ltrim($ruta, '/'));
+    header('Location: ' . PROYECTO_PATH . '/' . ltrim($ruta, '/'));
     exit;
 }
 
