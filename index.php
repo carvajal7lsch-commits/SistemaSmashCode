@@ -40,8 +40,15 @@ $app->post('/restablecer/guardar', 'AuthController@guardarClave');
 // --- Panel de Administración ---
 $app->get('/admin', 'AdminController@index');
 
-// --- Panel del Instructor ---
-$app->get('/instructor', 'InstructorController@index');
+// --- Gestión de Usuarios (HU04) ---
+$app->get('/admin/usuarios', 'AdminController@usuarios');
+$app->get('/admin/usuarios/crear', 'AdminController@crearUsuario');
+$app->post('/admin/usuarios/guardar', 'AdminController@guardarUsuario');
+$app->get('/admin/usuarios/editar', 'AdminController@editarUsuario');
+$app->post('/admin/usuarios/actualizar', 'AdminController@actualizarUsuario');
+$app->post('/admin/usuarios/suspender', 'AdminController@suspenderUsuario');
+$app->post('/admin/usuarios/eliminar', 'AdminController@eliminarUsuario');
+$app->get('/admin/usuarios/actividad', 'AdminController@actividadUsuario');
 
 // ==============================================================
 

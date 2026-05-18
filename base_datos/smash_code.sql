@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nivel_perfil     VARCHAR(100) NOT NULL DEFAULT 'Novato',
     intentos_fallidos INT         NOT NULL DEFAULT 0,    -- para bloqueo tras 5 intentos
     bloqueado        TINYINT(1)   NOT NULL DEFAULT 0,
+    eliminado        TINYINT(1)   NOT NULL DEFAULT 0,    -- soft-delete (HU04)
     debe_cambiar_clave TINYINT(1) NOT NULL DEFAULT 0,   -- instructores creados por admin
     creado_en        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     actualizado_en   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
