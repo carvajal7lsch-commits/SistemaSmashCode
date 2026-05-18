@@ -6,42 +6,7 @@
   <title>Log de Actividad — <?= limpiar($usuario['nombre_completo']) ?> — SmashCode</title>
   <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    .linea-tiempo { list-style: none; padding: 0; margin: 0; position: relative; }
-    .linea-tiempo::before {
-      content: ''; position: absolute; left: 15px; top: 0; bottom: 0;
-      width: 2px; background: var(--borde-sutil);
-    }
-    .lt-item {
-      display: flex; gap: 16px; align-items: flex-start;
-      padding: 12px 0 12px 10px; position: relative;
-    }
-    .lt-icono {
-      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; position: relative; z-index: 1;
-    }
-    .lt-quiz      { background: rgba(30,132,73,0.15); color: var(--verde-acento); }
-    .lt-ejercicio { background: rgba(46,134,193,0.15); color: var(--azul-claro); }
-    .lt-cuerpo { flex: 1; }
-    .lt-titulo    { font-size: var(--texto-sm); font-weight: 700; color: var(--texto-principal); }
-    .lt-detalle   { font-size: 0.78rem; color: var(--texto-secundario); margin-top: 2px; }
-    .lt-fecha     { font-size: 0.7rem; color: var(--texto-tenue); margin-top: 4px; }
-    .badge-correcto   { background: rgba(30,132,73,0.12);  color: var(--verde-acento); border-radius: 4px; padding: 1px 7px; font-size: 0.68rem; font-weight: 700; }
-    .badge-incorrecto { background: rgba(231,76,60,0.12);  color: var(--rojo);         border-radius: 4px; padding: 1px 7px; font-size: 0.68rem; font-weight: 700; }
-    .badge-aprobado   { background: rgba(30,132,73,0.12);  color: var(--verde-acento); border-radius: 4px; padding: 1px 7px; font-size: 0.68rem; font-weight: 700; }
-    .badge-reprobado  { background: rgba(231,76,60,0.12);  color: var(--rojo);         border-radius: 4px; padding: 1px 7px; font-size: 0.68rem; font-weight: 700; }
-    .perfil-card {
-      display: flex; align-items: center; gap: 18px;
-      background: var(--fondo-sidebar); padding: 18px 22px; border-radius: var(--radio);
-      margin-bottom: 24px; border: 1px solid var(--borde-sutil);
-    }
-    .perfil-avatar {
-      width: 56px; height: 56px; border-radius: 50%; background: var(--verde-salud);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; font-weight: 900; color: #fff; flex-shrink: 0;
-    }
-  </style>
+
 </head>
 <body>
 <div class="contenedor-app">
