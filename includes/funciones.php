@@ -5,6 +5,18 @@
  * Incluye sanitización, redirección y generación de tokens.
  */
 
+// Definir la ruta base del proyecto de manera dinámica (funciona en raíz del dominio/puerto o en subcarpetas)
+if (!defined('PROYECTO_PATH')) {
+    $folder_name = basename(dirname(__DIR__));
+    $script_name = $_SERVER['SCRIPT_NAME'] ?? '';
+    if (strpos($script_name, '/' . $folder_name) === 0) {
+        define('PROYECTO_PATH', '/' . $folder_name);
+    } else {
+        define('PROYECTO_PATH', '');
+    }
+}
+
+
 /**
  * Sanitiza una cadena para prevenir XSS.
  * @param string $valor Cadena de entrada

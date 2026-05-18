@@ -5,6 +5,18 @@
  * Seguridad: HttpOnly, SameSite=Strict, expiración por inactividad (RF02).
  */
 
+// Definir la ruta base del proyecto de manera dinámica (funciona en raíz del dominio/puerto o en subcarpetas)
+if (!defined('PROYECTO_PATH')) {
+    $folder_name = basename(dirname(__DIR__));
+    $script_name = $_SERVER['SCRIPT_NAME'] ?? '';
+    if (strpos($script_name, '/' . $folder_name) === 0) {
+        define('PROYECTO_PATH', '/' . $folder_name);
+    } else {
+        define('PROYECTO_PATH', '');
+    }
+}
+
+
 /* --- Configuración de cookies seguras --- */
 ini_set('session.cookie_httponly', 1);       // Evita acceso JS a la cookie
 ini_set('session.cookie_samesite', 'Strict'); // Protección CSRF
