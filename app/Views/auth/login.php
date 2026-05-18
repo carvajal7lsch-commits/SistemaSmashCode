@@ -1,145 +1,3 @@
-<?php
-/**
- * login.php — Módulo de autenticación con diseño Duolingo + pingüino
- * RF01, RF02, RF06
- */
-require_once '../../config/conexion.php';
-require_once '../../config/sesion.php';
-require_once '../../includes/funciones.php';
-require_once '../../includes/correo.php';
-require_once '../../vendor/autoload.php';
-use Firebase\JWT\JWT;
-
-// En un entorno de producción, forzar HTTPS
-// if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') {
-//     header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-//     exit();
-// }
-
-iniciarSesion();
-
-if (estaAutenticado()) {
-    $rol = obtenerRolSesion();
-    if ($rol === 'admin')       redirigir('modulos/admin/dashboard.php');
-    elseif ($rol === 'instructor') redirigir('modulos/instructor/dashboard.php');
-    else                           redirigir('index.php');
-}
-
-$error  = '';
-$exito  = '';
-$accion = $_GET['accion'] ?? 'ingresar';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
-        $error = 'Solicitud inválida. Recarga la página.';
-    } else {
-        $accion = $_POST['accion'] ?? 'ingresar';
-
-        if ($accion === 'ingresar') {
-            $correo    = limpiar($_POST['correo'] ?? '');
-            $contrasena = $_POST['contrasena'] ?? '';
-
-            if (empty($correo) || empty($contrasena)) {
-                $error = 'Completa todos los campos.';
-            } else {
-                $pdo  = obtenerConexion();
-                $stmt = $pdo->prepare('SELECT id, nombre_completo, contrasena, rol, activo, bloqueado, intentos_fallidos FROM usuarios WHERE correo = ? LIMIT 1');
-                $stmt->execute([$correo]);
-                $usuario = $stmt->fetch();
-
-                if (!$usuario) {
-                    $error = 'Correo o contraseña incorrectos.';
-                } elseif ($usuario['bloqueado']) {
-                    $error = 'Cuenta bloqueada. Revisa tu correo.';
-                } elseif (!$usuario['activo']) {
-                    $error = 'Cuenta suspendida. Contacta al administrador.';
-                } elseif (!password_verify($contrasena, $usuario['contrasena'])) {
-                    $intentos = $usuario['intentos_fallidos'] + 1;
-                    $bloquear = $intentos >= 5 ? 1 : 0;
-                    $pdo->prepare('UPDATE usuarios SET intentos_fallidos=?, bloqueado=? WHERE id=?')
-                        ->execute([$intentos, $bloquear, $usuario['id']]);
-                    if ($bloquear) {
-                        $error = 'Cuenta bloqueada por demasiados intentos.';
-                        enviarCorreo(
-                            $correo,
-                            'Alerta de Seguridad - Cuenta Bloqueada',
-                            '<h1>Cuenta Bloqueada</h1><p>Tu cuenta ha sido bloqueada tras 5 intentos fallidos de inicio de sesión. Por favor, restablece tu contraseña para recuperar el acceso.</p>'
-                        );
-                    } else {
-                        $error = 'Contraseña incorrecta. Intento ' . $intentos . ' de 5.';
-                    }
-                } else {
-                    $pdo->prepare('UPDATE usuarios SET intentos_fallidos=0 WHERE id=?')->execute([$usuario['id']]);
-                    session_regenerate_id(true);
-                    $_SESSION['usuario_id']       = $usuario['id'];
-                    $_SESSION['nombre']           = $usuario['nombre_completo'];
-                    $_SESSION['rol']              = $usuario['rol'];
-                    $_SESSION['ultima_actividad'] = time();
-
-                    // Generar token JWT — clave de mínimo 32 caracteres (requerido por HS256)
-                    if (!defined('JWT_SECRET')) {
-                        if (file_exists('../../config/credenciales.php')) {
-                            require_once '../../config/credenciales.php';
-                        } else {
-                            require_once '../../config/credenciales.example.php';
-                        }
-                    }
-                    $secret_key = JWT_SECRET;
-                    $payload = [
-                        'iss' => 'smashcode',
-                        'aud' => 'smashcode_users',
-                        'iat' => time(),
-                        'nbf' => time(),
-                        'exp' => time() + 1800, // 30 min
-                        'data' => [
-                            'id' => $usuario['id'],
-                            'rol' => $usuario['rol']
-                        ]
-                    ];
-                    $jwt = JWT::encode($payload, $secret_key, 'HS256');
-                    $_SESSION['jwt_token'] = $jwt;
-
-                    if ($usuario['rol'] === 'admin')       redirigir('modulos/admin/dashboard.php');
-                    elseif ($usuario['rol'] === 'instructor') redirigir('modulos/instructor/dashboard.php');
-                    else                                      redirigir('index.php');
-                }
-            }
-        } elseif ($accion === 'registrar') {
-            $nombre    = limpiar($_POST['nombre_completo'] ?? '');
-            $correo    = limpiar($_POST['correo'] ?? '');
-            $ficha     = limpiar($_POST['ficha_sena'] ?? '');
-            $programa  = limpiar($_POST['programa_id'] ?? '');
-            $contrasena = $_POST['contrasena'] ?? '';
-
-            if (empty($nombre) || empty($correo) || empty($contrasena)) {
-                $error = 'Nombre, correo y contraseña son obligatorios.';
-            } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-                $error = 'El correo no tiene un formato válido.';
-            } elseif (strlen($contrasena) < 8 || !preg_match('/[A-Z]/', $contrasena) || !preg_match('/[0-9]/', $contrasena)) {
-                $error = 'La contraseña debe tener mínimo 8 caracteres, 1 mayúscula y 1 número.';
-            } else {
-                $pdo  = obtenerConexion();
-                $stmt = $pdo->prepare('SELECT id FROM usuarios WHERE correo=? LIMIT 1');
-                $stmt->execute([$correo]);
-                if ($stmt->fetch()) {
-                    $error = 'Este correo ya está registrado.';
-                } else {
-                    $hash = password_hash($contrasena, PASSWORD_BCRYPT, ['cost' => 12]);
-                    $id   = generarUUID();
-                    $pdo->prepare('INSERT INTO usuarios (id,nombre_completo,correo,contrasena,ficha_sena,programa_id,rol) VALUES (?,?,?,?,?,?,"aprendiz")')
-                        ->execute([$id, $nombre, $correo, $hash, $ficha ?: null, $programa ?: null]);
-                    $exito  = '¡Cuenta creada! Ya puedes iniciar sesión.';
-                    $accion = 'ingresar';
-                }
-            }
-        }
-    }
-}
-
-$pdo      = obtenerConexion();
-$programas = $pdo->query('SELECT id, nombre FROM programa_formacion ORDER BY nombre')->fetchAll();
-$csrf     = generarTokenCSRF();
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -147,7 +5,7 @@ $csrf     = generarTokenCSRF();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ingresar — SmashCode</title>
   <meta name="description" content="Plataforma de inglés clínico para Enfermería SENA.">
-  <link rel="stylesheet" href="../../assets/css/estilos.css">
+  <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -225,7 +83,7 @@ $csrf     = generarTokenCSRF();
       <?php endif; ?>
 
       <!-- FORM INGRESAR -->
-      <form id="formulario-ingresar" method="POST" action="login.php" style="display:<?= $accion==='ingresar'?'block':'none' ?>;" novalidate>
+      <form id="formulario-ingresar" method="POST" action="<?= PROYECTO_PATH ?>/login/ingresar" style="display:<?= $accion==='ingresar'?'block':'none' ?>;" novalidate>
         <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
         <input type="hidden" name="accion" value="ingresar">
 
@@ -244,7 +102,7 @@ $csrf     = generarTokenCSRF();
           </div>
         </div>
         <div style="text-align:right; margin-bottom:16px;">
-          <a href="recuperar.php" style="font-size:0.8rem; color:var(--azul); font-weight:700;">¿Olvidaste tu contraseña?</a>
+          <a href="<?= PROYECTO_PATH ?>/recuperar" style="font-size:0.8rem; color:var(--azul); font-weight:700;">¿Olvidaste tu contraseña?</a>
         </div>
 
         <button type="submit" class="btn btn-verde">
@@ -258,7 +116,7 @@ $csrf     = generarTokenCSRF();
       </form>
 
       <!-- FORM REGISTRO -->
-      <form id="formulario-registro" method="POST" action="login.php?accion=registrar" style="display:<?= $accion==='registrar'?'block':'none' ?>;" novalidate>
+      <form id="formulario-registro" method="POST" action="<?= PROYECTO_PATH ?>/login/registrar" style="display:<?= $accion==='registrar'?'block':'none' ?>;" novalidate>
         <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
         <input type="hidden" name="accion" value="registrar">
 
@@ -320,6 +178,6 @@ $csrf     = generarTokenCSRF();
     </div>
   </div>
 </main>
-<script src="../../assets/js/login.js"></script>
+<script src="<?= PROYECTO_PATH ?>/assets/js/login.js"></script>
 </body>
 </html>

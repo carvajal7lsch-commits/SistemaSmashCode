@@ -1,41 +1,10 @@
-<?php
-/**
- * dashboard.php — Panel de administrador
- * Estadísticas generales de la plataforma (HU04, RF04, RF32).
- */
-
-require_once '../../config/conexion.php';
-require_once '../../config/sesion.php';
-require_once '../../includes/funciones.php';
-
-iniciarSesion();
-requerirRol('admin');
-
-$pdo = obtenerConexion();
-
-/* ── KPIs principales ── */
-$totalUsuarios   = $pdo->query("SELECT COUNT(*) FROM usuarios WHERE rol = 'aprendiz'")->fetchColumn();
-$aprendicesActivos = $pdo->query("SELECT COUNT(*) FROM usuarios WHERE rol = 'aprendiz' AND activo = 1")->fetchColumn();
-$totalXP         = $pdo->query("SELECT COALESCE(SUM(xp_puntos),0) FROM usuarios")->fetchColumn();
-$quizzesCompletos = $pdo->query("SELECT COUNT(*) FROM intento_quiz WHERE aprobado = 1")->fetchColumn();
-
-/* ── Actividad reciente: últimos intentos de quiz ── */
-$actividad = $pdo->query(
-    "SELECT u.nombre_completo, iq.puntaje, iq.aprobado, iq.creado_en, r.titulo AS rap_titulo
-     FROM intento_quiz iq
-     JOIN usuarios u ON u.id = iq.usuario_id
-     JOIN quiz q     ON q.id = iq.quiz_id
-     JOIN rap r      ON r.id = q.rap_id
-     ORDER BY iq.creado_en DESC LIMIT 5"
-)->fetchAll();
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — Admin SmashCode</title>
-  <link rel="stylesheet" href="../../assets/css/estilos.css">
+  <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     .icono-azul   { background: rgba(46,134,193,0.15);  color: var(--azul-claro); }
@@ -106,57 +75,57 @@ $actividad = $pdo->query(
     <ul class="nav-lateral">
       <li><span class="nav-grupo-titulo">General</span></li>
       <li>
-        <a href="dashboard.php" class="nav-enlace activo" aria-current="page">
+        <a href="<?= PROYECTO_PATH ?>/admin" class="nav-enlace activo" aria-current="page">
           <i class="fas fa-gauge-high nav-icono"></i><span>Dashboard</span>
         </a>
       </li>
 
       <li><span class="nav-grupo-titulo">Plataforma</span></li>
       <li>
-        <a href="usuarios.php" class="nav-enlace">
+        <a href="<?= PROYECTO_PATH ?>/modulos/admin/usuarios.php" class="nav-enlace">
           <i class="fas fa-users nav-icono"></i><span>Usuarios</span>
           <span class="nav-badge"><?= $totalUsuarios ?></span>
         </a>
       </li>
       <li>
-        <a href="niveles.php" class="nav-enlace">
+        <a href="<?= PROYECTO_PATH ?>/modulos/admin/niveles.php" class="nav-enlace">
           <i class="fas fa-layer-group nav-icono"></i><span>Niveles</span>
         </a>
       </li>
       <li>
-        <a href="raps.php" class="nav-enlace">
+        <a href="<?= PROYECTO_PATH ?>/modulos/admin/raps.php" class="nav-enlace">
           <i class="fas fa-file-lines nav-icono"></i><span>RAPs</span>
         </a>
       </li>
       <li>
-        <a href="vocabulario.php" class="nav-enlace">
+        <a href="<?= PROYECTO_PATH ?>/modulos/admin/vocabulario.php" class="nav-enlace">
           <i class="fas fa-spell-check nav-icono"></i><span>Vocabulario</span>
         </a>
       </li>
       <li>
-        <a href="quizzes.php" class="nav-enlace">
+        <a href="<?= PROYECTO_PATH ?>/modulos/admin/quizzes.php" class="nav-enlace">
           <i class="fas fa-question-circle nav-icono"></i><span>Quizzes</span>
         </a>
       </li>
       <li>
-        <a href="glosario.php" class="nav-enlace">
+        <a href="<?= PROYECTO_PATH ?>/modulos/admin/glosario.php" class="nav-enlace">
           <i class="fas fa-book-medical nav-icono"></i><span>Glosario</span>
         </a>
       </li>
 
       <li><span class="nav-grupo-titulo">Reportes</span></li>
       <li>
-        <a href="analytics.php" class="nav-enlace">
+        <a href="<?= PROYECTO_PATH ?>/modulos/admin/analytics.php" class="nav-enlace">
           <i class="fas fa-chart-line nav-icono"></i><span>Analytics</span>
         </a>
       </li>
       <li>
-        <a href="configuracion.php" class="nav-enlace">
+        <a href="<?= PROYECTO_PATH ?>/modulos/admin/configuracion.php" class="nav-enlace">
           <i class="fas fa-gear nav-icono"></i><span>Configuración</span>
         </a>
       </li>
       <li>
-        <a href="../../modulos/auth/cerrar-sesion.php" class="nav-enlace" style="color:var(--rojo);">
+        <a href="<?= PROYECTO_PATH ?>/logout" class="nav-enlace" style="color:var(--rojo);">
           <i class="fas fa-right-from-bracket nav-icono"></i><span>Cerrar Sesión</span>
         </a>
       </li>

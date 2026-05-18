@@ -1,0 +1,14 @@
+# SmashCode MVC Router Configuration
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Prevenir que se listen los directorios
+    Options -Indexes
+
+    # Si el archivo o directorio solicitado existe físicamente en el disco, cargarlo directamente
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Redirigir todas las demás peticiones al Front Controller principal index.php
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
