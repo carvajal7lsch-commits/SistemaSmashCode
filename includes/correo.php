@@ -10,14 +10,15 @@ use PHPMailer\PHPMailer\Exception;
 function enviarCorreo(string $destinatario, string $asunto, string $cuerpo): bool {
     $mail = new PHPMailer(true);
     try {
-        // Configuración del servidor (ajustar en producción)
+        // Configuración para Gmail SMTP
         $mail->isSMTP();
-        $mail->Host       = 'sandbox.smtp.mailtrap.io'; // Usando Mailtrap para pruebas seguras
+        $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'test'; // Reemplazar con credenciales reales
-        $mail->Password   = 'test'; // Reemplazar con credenciales reales
+        // 👇 Coloca tu correo de Gmail y la Contraseña de Aplicación aquí 👇
+        $mail->Username   = 'santiagolizcanosuarez@gmail.com'; // O el correo que usen para enviar
+        $mail->Password   = 'AQUI_VA_TU_CONTRASENA_DE_APLICACION'; 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 2525;
+        $mail->Port       = 587;
 
         // Remitente y destinatario
         $mail->setFrom('no-reply@smashcode.edu.co', 'SmashCode SENA');

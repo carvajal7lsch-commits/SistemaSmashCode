@@ -368,15 +368,8 @@ INSERT INTO insignia (id, nombre, descripcion, criterio) VALUES
 (UUID(), 'Vocabulario Pro',   'Aprendiste 50 palabras médicas',              'vocabulario_aprendido >= 50'),
 (UUID(), 'Estudiante Élite',  'Completaste todos los niveles',               'niveles_completados = 6');
 
--- Administrador por defecto (contraseña: Admin@2025 — cambiar en producción)
--- Hash bcrypt generado con cost 12
-INSERT INTO usuarios (id, nombre_completo, correo, contrasena, rol, activo, correo_verificado)
-VALUES (
-    UUID(),
-    'Administrador SENA',
-    'admin@smashcode.edu.co',
-    '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- Admin@2025
-    'admin',
-    1,
-    1
-);
+-- Administrador (Santiago Lizcano) y Instructor (Sebastian Carvajal)
+-- Hash bcrypt generado con cost 12 para la contraseña: admin2026
+INSERT INTO usuarios (id, nombre_completo, correo, contrasena, rol, activo, correo_verificado) VALUES
+(UUID(), 'Santiago Lizcano', 'santiagolizcanosuarez@gmail.com', '$2y$12$KkQ1pBOn.P9iVvV5b61uWeq8jA.R3lV7J5A.vG201.O.jQ9eC6bM2', 'admin', 1, 1),
+(UUID(), 'Sebastian Carvajal', 'carvajal7lsch@gmail.com', '$2y$12$KkQ1pBOn.P9iVvV5b61uWeq8jA.R3lV7J5A.vG201.O.jQ9eC6bM2', 'instructor', 1, 1);
