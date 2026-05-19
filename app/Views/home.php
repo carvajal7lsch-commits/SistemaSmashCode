@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aprender — SmashCode Enfermería SENA</title>
   <meta name="description" content="Aprende inglés clínico con SmashCode, plataforma gamificada para enfermería SENA.">
-  <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css">
+  <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css?v=<?= time() ?>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     /* Panel aprendiz — tema claro Duolingo */
@@ -162,8 +162,47 @@
   <!-- ============ BARRA LATERAL ============ -->
   <nav class="barra-lateral" aria-label="Navegación principal">
     <div class="logo-app">
-      <div class="logo-icono">🐧</div>
-      <span class="logo-nombre">Smash<span>Code</span></span>
+      <div class="logo-icono">
+        <svg viewBox="0 0 100 100" width="40" height="40" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+          <!-- Sombra sutil -->
+          <ellipse cx="50" cy="85" rx="22" ry="5" fill="#000" opacity="0.3" />
+          
+          <!-- Patitas (Naranja Duolingo) -->
+          <ellipse cx="38" cy="82" rx="7" ry="4" fill="#FF9600" />
+          <ellipse cx="62" cy="82" rx="7" ry="4" fill="#FF9600" />
+          
+          <!-- Cuerpo Principal (Azul oscuro mate Duolingo) -->
+          <rect x="26" y="20" width="48" height="58" rx="24" fill="#2B3E46" />
+          
+          <!-- Aletas laterales -->
+          <!-- Izquierda -->
+          <path d="M 26 38 C 17 42 17 56 26 62 Z" fill="#2B3E46" />
+          <!-- Derecha -->
+          <path d="M 74 38 C 83 42 83 56 74 62 Z" fill="#2B3E46" />
+          
+          <!-- Barriga (Blanca redonda) -->
+          <ellipse cx="50" cy="54" rx="17" ry="20" fill="#FFFFFF" />
+          
+          <!-- Cara (Parches blancos de los ojos) -->
+          <ellipse cx="41" cy="38" rx="9" ry="9" fill="#FFFFFF" />
+          <ellipse cx="59" cy="38" rx="9" ry="9" fill="#FFFFFF" />
+          
+          <!-- Ojos Grandes Lindos -->
+          <!-- Ojo Izquierdo -->
+          <circle cx="42" cy="38" r="5" fill="#111B1E" />
+          <circle cx="40.5" cy="36.5" r="1.8" fill="#FFFFFF" />
+          <!-- Ojo Derecho -->
+          <circle cx="58" cy="38" r="5" fill="#111B1E" />
+          <circle cx="56.5" cy="36.5" r="1.8" fill="#FFFFFF" />
+          
+          <!-- Pico Naranja Lindo -->
+          <path d="M 44 43 Q 50 51 56 43 Z" fill="#FF9600" stroke="#FF9600" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div>
+        <div class="logo-nombre">Smash<span>Code</span></div>
+        <div style="font-size: 0.62rem; color: #52656D; letter-spacing: 1.5px; font-weight: 800; padding-left: 2px; margin-top: 2px;">APRENDIZ</div>
+      </div>
     </div>
 
     <ul class="nav-lateral">
@@ -174,7 +213,7 @@
         </a>
       </li>
       <li>
-        <a href="<?= PROYECTO_PATH ?>/modulos/aprendiz/vocabulario.php" class="nav-enlace">
+        <a href="<?= PROYECTO_PATH ?>/aprendiz/vocabulario" class="nav-enlace">
           <i class="fas fa-spell-check nav-icono"></i>
           <span>Vocabulario</span>
         </a>

@@ -66,14 +66,33 @@ class App {
             $controladorMetodo = $this->rutas[$metodoHttp][$rutaLimpia];
             $this->despachar($controladorMetodo);
         } else {
-            // Código de estado HTTP 404
+            // Asegurar que la ruta base esté definida de forma dinámica
+            if (!defined('PROYECTO_PATH')) {
+                $folder_name = basename(dirname(__DIR__, 2));
+                $script_name = $_SERVER['SCRIPT_NAME'] ?? '';
+                if (strpos($script_name, '/' . $folder_name) === 0) {
+                    define('PROYECTO_PATH', '/' . $folder_name);
+                } else {
+                    define('PROYECTO_PATH', '');
+                }
+            }
+
+            // Iniciar sesión para identificar el rol del usuario en la vista 404
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+
             http_response_code(404);
-            echo "<div style='font-family: sans-serif; text-align: center; margin-top: 10%; color: #333;'>";
-            echo "  <h1 style='font-size: 4rem; margin-bottom: 10px; color: #E74C3C;'>404</h1>";
-            echo "  <h2>Página No Encontrada</h2>";
-            echo "  <p style='color: #7F8C8D;'>La ruta '" . htmlspecialchars($rutaLimpia) . "' no existe en este servidor.</p>";
-            echo "  <a href='" . PROYECTO_PATH . "/' style='display: inline-block; margin-top: 20px; padding: 10px 20px; background: #2ECC71; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;'>Volver al Inicio</a>";
-            echo "</div>";
+            $archivoVista = dirname(__DIR__) . '/Views/errors/404.php';
+            if (file_exists($archivoVista)) {
+                require_once $archivoVista;
+            } else {
+                echo "<div style='font-family:sans-serif;text-align:center;margin-top:10%;color:#fff;background:#131F24;min-height:100vh;padding-top:40px;'>";
+                echo "  <h1 style='font-size:4rem;color:#FF4B4B;'>404</h1>";
+                echo "  <h2>Página No Encontrada</h2>";
+                echo "</div>";
+            }
+            exit;
         }
     }
 

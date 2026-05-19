@@ -66,9 +66,10 @@ class AdminController extends Controller {
         $total  = $this->usuarioModel->contarTotal($busqueda, $rol);
         $paginas = (int) ceil($total / $porPagina);
         $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $programas     = $this->programaModel->obtenerTodos();
 
         $this->render('admin/usuarios', compact(
-            'lista', 'total', 'paginas', 'pagina', 'busqueda', 'rol', 'totalUsuarios'
+            'lista', 'total', 'paginas', 'pagina', 'busqueda', 'rol', 'totalUsuarios', 'programas'
         ));
     }
 
@@ -99,29 +100,16 @@ class AdminController extends Controller {
         $rol       = limpiar($_POST['rol'] ?? 'aprendiz');
         $ficha     = limpiar($_POST['ficha_sena'] ?? '');
         $contrasena = $_POST['contrasena'] ?? '';
-        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
 
         $errores = $this->validarCamposUsuario($nombre, $correo, $contrasena);
 
         if ($errores) {
-            $this->render('admin/usuario_form', [
-                'usuario'      => compact('nombre', 'correo', 'rol', 'ficha'),
-                'totalUsuarios' => $totalUsuarios,
-                'modoEditar'   => false,
-                'error'        => implode(' ', $errores),
-                'exito'        => ''
-            ]);
+            $this->redirect('admin/usuarios?error=' . urlencode(implode(' ', $errores)));
             return;
         }
 
         if ($this->usuarioModel->existeCorreo($correo)) {
-            $this->render('admin/usuario_form', [
-                'usuario'      => compact('nombre', 'correo', 'rol', 'ficha'),
-                'totalUsuarios' => $totalUsuarios,
-                'modoEditar'   => false,
-                'error'        => 'Ese correo ya está registrado en el sistema.',
-                'exito'        => ''
-            ]);
+            $this->redirect('admin/usuarios?error=' . urlencode('Ese correo ya está registrado en el sistema.'));
             return;
         }
 
@@ -168,7 +156,8 @@ class AdminController extends Controller {
         $ficha  = limpiar($_POST['ficha_sena'] ?? '');
 
         if (empty($id) || empty($nombre) || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-            $this->redirect('admin/usuarios/editar?id=' . $id . '&error=datos');
+            $this->redirect('admin/usuarios?error=' . urlencode('El nombre es obligatorio y el correo electrónico debe tener un formato válido.'));
+            return;
         }
 
         $this->usuarioModel->actualizar($id, $nombre, $correo, $rol, $ficha ?: null);
@@ -217,12 +206,26 @@ class AdminController extends Controller {
         $usuario = $this->usuarioModel->obtenerPorId($id);
 
         if (!$usuario) {
+            if (isset($_GET['ajax'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'Usuario no encontrado']);
+                return;
+            }
             $this->redirect('admin/usuarios');
         }
 
         $log = $this->usuarioModel->obtenerActividad($id);
-        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
 
+        if (isset($_GET['ajax'])) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'usuario' => $usuario,
+                'logs'    => $log
+            ]);
+            return;
+        }
+
+        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
         $this->render('admin/usuario_actividad', compact('usuario', 'log', 'totalUsuarios'));
     }
 
@@ -260,8 +263,6 @@ class AdminController extends Controller {
         $correo     = limpiar($_POST['correo'] ?? '');
         $programaId = limpiar($_POST['programa_id'] ?? '');
         $ficha      = limpiar($_POST['ficha_sena'] ?? '');
-        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
-        $programas     = $this->programaModel->obtenerTodos();
 
         // Validaciones básicas
         $errores = [];
@@ -269,22 +270,12 @@ class AdminController extends Controller {
         if (!filter_var($correo, FILTER_VALIDATE_EMAIL))  $errores[] = 'Correo inválido.';
 
         if ($errores) {
-            $this->render('admin/instructor_form', [
-                'error'         => implode(' ', $errores),
-                'totalUsuarios' => $totalUsuarios,
-                'programas'     => $programas,
-                'datos'         => compact('nombre', 'correo', 'programaId', 'ficha'),
-            ]);
+            $this->redirect('admin/usuarios?error=' . urlencode(implode(' ', $errores)));
             return;
         }
 
         if ($this->usuarioModel->existeCorreo($correo)) {
-            $this->render('admin/instructor_form', [
-                'error'         => 'Ese correo ya está registrado en el sistema.',
-                'totalUsuarios' => $totalUsuarios,
-                'programas'     => $programas,
-                'datos'         => compact('nombre', 'correo', 'programaId', 'ficha'),
-            ]);
+            $this->redirect('admin/usuarios?error=' . urlencode('Ese correo ya está registrado en el sistema.'));
             return;
         }
 

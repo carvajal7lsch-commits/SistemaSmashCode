@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ingresar — SmashCode</title>
   <meta name="description" content="Plataforma de inglés clínico para Enfermería SENA.">
-  <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css">
+  <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css?v=<?= time() ?>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -101,9 +101,10 @@
         </div>
         <div class="grupo-campo">
           <label class="etiqueta-campo" for="clave-ingreso">Contraseña</label>
-          <div class="contenedor-input">
+          <div class="contenedor-input" style="position:relative;">
             <i class="fas fa-lock icono-input"></i>
-            <input type="password" id="clave-ingreso" name="contrasena" class="campo-input" placeholder="Tu contraseña" required>
+            <input type="password" id="clave-ingreso" name="contrasena" class="campo-input" placeholder="Tu contraseña" style="padding-right: 40px;" required>
+            <i class="fas fa-eye toggle-password" data-target="clave-ingreso" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--gris-medio); cursor:pointer; font-size:0.9rem; z-index:10; transition:color 0.2s;"></i>
           </div>
         </div>
         <div style="text-align:right; margin-bottom:16px;">
@@ -161,9 +162,10 @@
         </div>
         <div class="grupo-campo">
           <label class="etiqueta-campo" for="clave-registro">Contraseña</label>
-          <div class="contenedor-input">
+          <div class="contenedor-input" style="position:relative;">
             <i class="fas fa-lock icono-input"></i>
-            <input type="password" id="clave-registro" name="contrasena" class="campo-input" placeholder="Mín. 8 caracteres" required>
+            <input type="password" id="clave-registro" name="contrasena" class="campo-input" placeholder="Mín. 8 caracteres" style="padding-right: 40px;" required>
+            <i class="fas fa-eye toggle-password" data-target="clave-registro" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--gris-medio); cursor:pointer; font-size:0.9rem; z-index:10; transition:color 0.2s;"></i>
           </div>
           <span class="ayuda-campo">Incluye al menos 1 mayúscula y 1 número</span>
         </div>
