@@ -40,6 +40,9 @@ $app->post('/restablecer/guardar', 'AuthController@guardarClave');
 // --- Panel de Administración ---
 $app->get('/admin', 'AdminController@index');
 
+// --- Panel de Instructor ---
+$app->get('/instructor', 'InstructorController@index');
+
 // --- Gestión de Usuarios (HU04) ---
 $app->get('/admin/usuarios', 'AdminController@usuarios');
 $app->get('/admin/usuarios/crear', 'AdminController@crearUsuario');
