@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Log de Actividad — <?= limpiar($usuario['nombre_completo']) ?> — SmashCode</title>
   <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  <script>/* Aplicar tema guardado antes del paint */
+  (function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();
+  </script>
 </head>
 <body>
 <div class="contenedor-app">
@@ -17,7 +19,16 @@
   <main class="contenido-principal">
     <header class="barra-superior">
       <div class="stat-xp"><i class="fas fa-clock-rotate-left"></i> Log de Actividad</div>
-      <div class="avatar-usuario"><?= strtoupper(substr($_SESSION['nombre'], 0, 1)) ?></div>
+      <div style="margin-left: auto; display:flex; align-items:center; gap:16px;">
+        <!-- Botón cambio de tema -->
+        <button id="btn-cambiar-tema" class="btn-tema" aria-label="Cambiar a modo claro" title="Cambiar a modo claro">
+          <i class="fas fa-sun tema-icono"></i>
+          <span class="tema-label">Claro</span>
+        </button>
+        <div class="avatar-usuario" style="border: 2px solid var(--verde); background: linear-gradient(135deg, var(--verde), var(--azul)); font-weight: 800; cursor: default; margin: 0;" title="<?= limpiar($_SESSION['nombre']) ?>">
+          <?= strtoupper(substr($_SESSION['nombre'], 0, 1)) ?>
+        </div>
+      </div>
     </header>
 
     <div class="pagina-contenido">
@@ -101,4 +112,5 @@
   </main>
 </div>
 </body>
+<script src="<?= PROYECTO_PATH ?>/assets/js/tema.js"></script>
 </html>

@@ -46,6 +46,216 @@
   --sombra-premium-hover: none;
 }
 
+/* ══════════════════════════════════════════════════════════
+   ── MODO CLARO — variables que sobrescriben el tema oscuro ──
+   ══════════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  /* Fondos */
+  --fondo:        #F0F4F8;
+  --blanco:       #FFFFFF;
+  --gris-claro:   #E2E8F0;
+  --gris-medio:   #64748B;
+  --gris-texto:   #1E293B;
+  --borde:        2px solid #CBD5E1;
+  --sombra:       0 4px 0 #CBD5E1;
+  --sombra-verde: 0 4px 0 #46A302;
+  --sombra-azul:  0 4px 0 #0A91D1;
+
+  /* Variables semánticas adicionales */
+  --borde-activo:    #58CC02;
+  --borde-sutil:     #E2E8F0;
+  --texto-tenue:     #94A3B8;
+  --texto-secundario:#64748B;
+  --texto-principal: #1E293B;
+  --sombra-premium:  0 2px 12px rgba(0,0,0,0.08);
+  --sombra-premium-hover: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+/* Sobrescribir colores hard-codeados en clases que usan !important */
+[data-theme="light"] .barra-lateral {
+  background: #FFFFFF !important;
+  border-right: 2px solid #E2E8F0 !important;
+}
+[data-theme="light"] .logo-app {
+  background: #FFFFFF !important;
+}
+[data-theme="light"] .logo-nombre,
+[data-theme="light"] .logo-nombre span {
+  color: #46A302 !important;
+}
+[data-theme="light"] .nav-enlace:hover {
+  background: #F1F5F9 !important;
+  color: #1E293B !important;
+}
+[data-theme="light"] .nav-enlace.activo {
+  background: #EFF6FF !important;
+  border: 2px solid #1CB0F6 !important;
+  color: #0A91D1 !important;
+}
+[data-theme="light"] .nav-enlace.activo .nav-icono {
+  color: #0A91D1 !important;
+}
+[data-theme="light"] .nav-grupo-titulo {
+  color: #94A3B8 !important;
+}
+[data-theme="light"] body,
+[data-theme="light"] body.bg-mesh {
+  background-color: #F0F4F8 !important;
+  color: #1E293B !important;
+}
+[data-theme="light"] .tarjeta-premium {
+  background: #FFFFFF !important;
+  border: 2px solid #E2E8F0 !important;
+}
+[data-theme="light"] .tarjeta-premium:hover {
+  border-color: #CBD5E1 !important;
+}
+[data-theme="light"] .tabla-premium-wrap {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+[data-theme="light"] .tabla-premium th {
+  background: #F8FAFC !important;
+  color: #64748B !important;
+  border-bottom-color: #E2E8F0 !important;
+}
+[data-theme="light"] .tabla-premium td {
+  border-bottom-color: #F1F5F9 !important;
+  color: #1E293B !important;
+}
+[data-theme="light"] .tabla-premium tr:hover td {
+  background: #F8FAFC !important;
+}
+[data-theme="light"] .glass-panel {
+  background: rgba(255,255,255,0.85) !important;
+  border: 2px solid #E2E8F0 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08) !important;
+}
+[data-theme="light"] .campo-input {
+  background: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  color: #1E293B;
+}
+[data-theme="light"] .campo-input:focus {
+  background: #F8FAFC !important;
+  border-color: var(--azul) !important;
+  box-shadow: 0 0 0 3px rgba(28,176,246,0.15) !important;
+}
+[data-theme="light"] .input-busqueda,
+[data-theme="light"] .select-filtro {
+  background: #FFFFFF;
+  color: #1E293B;
+  border-color: #CBD5E1;
+}
+[data-theme="light"] .input-premium,
+[data-theme="light"] .select-premium {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #1E293B !important;
+}
+[data-theme="light"] .input-premium::placeholder {
+  color: #94A3B8 !important;
+}
+[data-theme="light"] .tarjeta {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+[data-theme="light"] .modal-caja,
+[data-theme="light"] .modal-caja-premium {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #1E293B !important;
+}
+[data-theme="light"] .modal-titulo {
+  color: #1E293B !important;
+}
+[data-theme="light"] .modal-desc {
+  color: #64748B !important;
+}
+[data-theme="light"] .tabla-premium-wrap,
+[data-theme="light"] .tabla-usuarios th,
+[data-theme="light"] .tabla-aprendices th {
+  background: #F8FAFC !important;
+}
+[data-theme="light"] .item-actividad-card {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #1E293B !important;
+}
+[data-theme="light"] .item-actividad-card:hover {
+  background: #F1F5F9 !important;
+}
+[data-theme="light"] .lt-cuerpo {
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+}
+[data-theme="light"] .panel-auth-der {
+  background: #FFFFFF;
+}
+[data-theme="light"] .tabs-rol {
+  background: #F1F5F9;
+}
+[data-theme="light"] .tab-rol.activo {
+  background: #FFFFFF;
+  color: var(--verde);
+}
+[data-theme="light"] .barra-superior {
+  background: #FFFFFF;
+  border-bottom: 2px solid #E2E8F0;
+}
+[data-theme="light"] .panel-lateral-derecho {
+  background: #FFFFFF;
+  border-left: 2px solid #E2E8F0;
+}
+[data-theme="light"] .tarjeta-liga,
+[data-theme="light"] .tarjeta-duo {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+}
+[data-theme="light"] .btn-premium-blanco {
+  background: #FFFFFF !important;
+  color: #1E293B !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 0 #CBD5E1 !important;
+}
+[data-theme="light"] .btn-premium-blanco:hover {
+  background: #F1F5F9 !important;
+  border-color: #94A3B8 !important;
+}
+[data-theme="light"] .grafico-semanal-wrap {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+[data-theme="light"] .tooltip-chart {
+  background: #1E293B !important;
+  color: #FFFFFF !important;
+}
+[data-theme="light"] .pag-btn {
+  background: #FFFFFF;
+  color: #1E293B;
+  border-color: #E2E8F0;
+}
+[data-theme="light"] .alerta-error { background: #FFF0F0; }
+[data-theme="light"] .alerta-exito { background: #F0FFF4; }
+[data-theme="light"] .alerta-info  { background: #F0FAFF; }
+[data-theme="light"] .caja-error-404 {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+}
+
+/* Transición suave al cambiar de tema */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+body,
+.barra-lateral, .barra-superior, .tarjeta, .tarjeta-premium,
+.tabla-premium-wrap, .modal-caja, .modal-caja-premium,
+.panel-auth-der, .campo-input, .input-busqueda, .select-filtro,
+.panel-lateral-derecho, .tarjeta-liga, .tarjeta-duo,
+.lt-cuerpo, .item-actividad-card, .pag-btn {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; }
 body { font-family: var(--fuente); background: var(--fondo); color: var(--gris-texto); line-height: 1.5; }
@@ -1006,4 +1216,57 @@ body.bg-mesh, body {
   background: #25373F !important;
 }
 
+/* ══════════════════════════════════════════════════
+   ── BOTÓN CAMBIO DE TEMA (Modo Claro / Oscuro) ──
+   ══════════════════════════════════════════════════ */
+.btn-tema {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 9999px;
+  border: 2px solid #354952;
+  background: #1F2F36;
+  color: #84929C;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  user-select: none;
+  flex-shrink: 0;
+}
+.btn-tema:hover {
+  border-color: var(--azul);
+  color: var(--azul);
+  background: rgba(28,176,246,0.08);
+}
+.btn-tema:active {
+  transform: scale(0.96);
+}
+.tema-icono {
+  font-size: 0.85rem;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tema-btn--animando .tema-icono {
+  animation: girar-icono-tema 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes girar-icono-tema {
+  from { transform: rotate(-90deg) scale(0.5); opacity: 0; }
+  to   { transform: rotate(0deg)   scale(1);   opacity: 1; }
+}
+
+/* Modo claro: sobrescribir estilo del botón */
+[data-theme="light"] .btn-tema {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  color: #64748B;
+}
+[data-theme="light"] .btn-tema:hover {
+  border-color: var(--azul);
+  color: var(--azul);
+  background: rgba(28,176,246,0.08);
+}
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +7,17 @@
   <meta name="description" content="Plataforma de inglés clínico para Enfermería SENA.">
   <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css?v=<?= time() ?>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>/* Aplicar tema guardado antes del paint */
+  (function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();
+  </script>
 </head>
 <body>
+<!-- Botón flotante de tema -->
+<button id="btn-cambiar-tema" class="btn-tema" aria-label="Cambiar a modo claro" title="Cambiar a modo claro"
+  style="position:fixed; top:16px; right:20px; z-index:9999;">
+  <i class="fas fa-sun tema-icono"></i>
+  <span class="tema-label">Claro</span>
+</button>
 <main class="pagina-auth">
   <div class="contenedor-auth animar-entrada">
 
@@ -186,5 +195,6 @@
   </div>
 </main>
 <script src="<?= PROYECTO_PATH ?>/assets/js/login.js"></script>
+<script src="<?= PROYECTO_PATH ?>/assets/js/tema.js"></script>
 </body>
 </html>

@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Usuarios — Admin SmashCode</title>
   <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css?v=<?= time() ?>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>/* Aplicar tema guardado antes del paint */
+  (function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();
+  </script>
   <style>
     /* Estilos locales para elevar la UX de la tabla */
     .btn-accion-premium {
@@ -134,8 +137,15 @@
         <i class="fas fa-chevron-right" style="font-size:0.6rem; color:var(--texto-tenue);"></i>
         <span style="color:var(--texto-secundario); font-weight:700;"><i class="fas fa-users-gear" style="color:var(--azul); margin-right:4px;"></i> Gestión de Usuarios</span>
       </div>
-      <div class="avatar-usuario" style="margin-left: auto; border: 2px solid var(--verde); background: linear-gradient(135deg, var(--verde), var(--azul)); font-weight: 800; cursor: default;" title="<?= limpiar($_SESSION['nombre']) ?>">
-        <?= strtoupper(substr($_SESSION['nombre'], 0, 1)) ?>
+      <div style="margin-left: auto; display:flex; align-items:center; gap:16px;">
+        <!-- Botón cambio de tema -->
+        <button id="btn-cambiar-tema" class="btn-tema" aria-label="Cambiar a modo claro" title="Cambiar a modo claro">
+          <i class="fas fa-sun tema-icono"></i>
+          <span class="tema-label">Claro</span>
+        </button>
+        <div class="avatar-usuario" style="border: 2px solid var(--verde); background: linear-gradient(135deg, var(--verde), var(--azul)); font-weight: 800; cursor: default;" title="<?= limpiar($_SESSION['nombre']) ?>">
+          <?= strtoupper(substr($_SESSION['nombre'], 0, 1)) ?>
+        </div>
       </div>
     </header>
 
@@ -180,13 +190,13 @@
       <div class="tabla-premium-wrap" style="background:var(--blanco); border-radius:16px; border:1px solid var(--borde-sutil); box-shadow: var(--sombra-premium); overflow:hidden;">
         
         <!-- Toolbar de Filtros Integrado -->
-        <div style="padding: 16px 20px; border-bottom: 1px solid var(--borde-sutil); background: #18262C;">
+        <div style="padding: 16px 20px; border-bottom: 1px solid var(--borde-sutil); background: var(--blanco);">
           <form method="GET" action="<?= PROYECTO_PATH ?>/admin/usuarios" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; width:100%; margin:0;">
             <!-- Campo de búsqueda -->
             <div style="position:relative; width: 100%; max-width: 320px; margin: 0;">
               <i class="fas fa-search" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--texto-tenue); font-size:0.9rem;"></i>
               <input type="text" name="busqueda" class="input-premium" 
-                     style="width:100%; padding: 10px 14px 10px 38px; border:2px solid #354952; background:var(--blanco); color:#fff; border-radius:12px; font-size:0.875rem;"
+                     style="width:100%; padding: 10px 14px 10px 38px; border:2px solid var(--borde-sutil); background:var(--blanco); color:var(--texto-principal); border-radius:12px; font-size:0.875rem;"
                      placeholder="Buscar por nombre o correo..."
                      value="<?= limpiar($busqueda) ?>">
             </div>
@@ -194,7 +204,7 @@
             <!-- Selector de Rol -->
             <div style="position:relative; min-width: 160px; margin:0;">
               <i class="fas fa-shield-halved" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--texto-tenue); font-size:0.9rem; pointer-events:none; z-index:5;"></i>
-              <select name="rol" class="select-premium" onchange="this.form.submit()" style="width:100%; padding: 10px 14px 10px 38px; border:2px solid #354952; background:var(--blanco); color:#fff; border-radius:12px; font-size:0.875rem; -webkit-appearance:none; -moz-appearance:none; appearance:none; background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239CA3AF%22 stroke-width=%223%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22%3E%3C/polyline%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 14px center; cursor:pointer;">
+              <select name="rol" class="select-premium" onchange="this.form.submit()" style="width:100%; padding: 10px 14px 10px 38px; border:2px solid var(--borde-sutil); background:var(--blanco); color:var(--texto-principal); border-radius:12px; font-size:0.875rem; -webkit-appearance:none; -moz-appearance:none; appearance:none; background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239CA3AF%22 stroke-width=%223%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22%3E%3C/polyline%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 14px center; cursor:pointer;">
                 <option value="">Todos los roles</option>
                 <option value="aprendiz"   <?= $rol === 'aprendiz'   ? 'selected' : '' ?>>Aprendiz</option>
                 <option value="instructor" <?= $rol === 'instructor' ? 'selected' : '' ?>>Instructor</option>
@@ -205,18 +215,18 @@
             <!-- Botones de Acción (Solo Limpiar si está activo) -->
             <?php if ($busqueda || $rol): ?>
               <div style="display:flex; gap:8px; margin:0;">
-                <a href="<?= PROYECTO_PATH ?>/admin/usuarios" class="btn-premium btn-premium-blanco" style="padding: 10px 18px; font-weight:700; border-radius:12px; display:inline-flex; align-items:center; gap:6px; height:42px; border:2px solid #354952; background:var(--blanco); box-shadow: 0 4px 0 #354952; color:var(--texto-principal);">
+                <a href="<?= PROYECTO_PATH ?>/admin/usuarios" class="btn-premium btn-premium-blanco" style="padding: 10px 18px; font-weight:700; border-radius:12px; display:inline-flex; align-items:center; gap:6px; height:42px; border:2px solid var(--borde-sutil); background:var(--blanco); box-shadow: 0 4px 0 var(--borde-sutil); color:var(--texto-principal);">
                   <i class="fas fa-xmark"></i> Limpiar
                 </a>
               </div>
             <?php endif; ?>
 
             <!-- Selector de Vista (Lista / Cuadrícula) -->
-            <div class="toggle-vista-wrapper" style="border: 2px solid #354952; background: #131F24; border-radius: 12px; display: inline-flex; padding: 3px; gap: 3px; height: 42px; align-items: center; margin-left: auto;">
-              <button type="button" id="btn-vista-lista" class="btn-toggle-vista activa" onclick="cambiarVista('list')" style="background: #1F2F36; border: 2px solid #354952; border-radius: 8px; color: #1CB0F6; font-size: 1rem; width: 36px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="Vista de Lista">
+            <div class="toggle-vista-wrapper" style="border: 2px solid var(--borde-sutil); background: var(--fondo); border-radius: 12px; display: inline-flex; padding: 3px; gap: 3px; height: 42px; align-items: center; margin-left: auto;">
+              <button type="button" id="btn-vista-lista" class="btn-toggle-vista activa" onclick="cambiarVista('list')" style="background: var(--blanco); border: 2px solid var(--borde-sutil); border-radius: 8px; color: var(--azul); font-size: 1rem; width: 36px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="Vista de Lista">
                 <i class="fas fa-list-ul"></i>
               </button>
-              <button type="button" id="btn-vista-cuadricula" class="btn-toggle-vista" onclick="cambiarVista('grid')" style="background: transparent; border: 2px solid transparent; border-radius: 8px; color: #84929C; font-size: 1rem; width: 36px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="Vista de Tarjetas (Cuadrícula)">
+              <button type="button" id="btn-vista-cuadricula" class="btn-toggle-vista" onclick="cambiarVista('grid')" style="background: transparent; border: 2px solid transparent; border-radius: 8px; color: var(--gris-medio); font-size: 1rem; width: 36px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="Vista de Tarjetas (Cuadrícula)">
                 <i class="fas fa-th-large"></i>
               </button>
             </div>
@@ -995,5 +1005,6 @@
     }
   });
 </script>
+<script src="<?= PROYECTO_PATH ?>/assets/js/tema.js"></script>
 </body>
 </html>

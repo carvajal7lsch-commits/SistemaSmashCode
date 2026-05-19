@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Instructor — SmashCode</title>
   <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css?v=<?= time() ?>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>/* Aplicar tema guardado antes del paint */
+  (function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();
+  </script>
   <style>
     .tabla-aprendices { width: 100%; border-collapse: collapse; }
     .tabla-aprendices th {
@@ -122,6 +125,11 @@
 
   <main class="contenido-principal">
     <header class="barra-superior">
+      <!-- Botón cambio de tema -->
+      <button id="btn-cambiar-tema" class="btn-tema" aria-label="Cambiar a modo claro" title="Cambiar a modo claro">
+        <i class="fas fa-sun tema-icono"></i>
+        <span class="tema-label">Claro</span>
+      </button>
       <div class="avatar-usuario" title="<?= limpiar($_SESSION['nombre']) ?>">
         <?= strtoupper(substr($_SESSION['nombre'], 0, 1)) ?>
       </div>
@@ -219,4 +227,5 @@
   </main>
 </div>
 </body>
+<script src="<?= PROYECTO_PATH ?>/assets/js/tema.js"></script>
 </html>

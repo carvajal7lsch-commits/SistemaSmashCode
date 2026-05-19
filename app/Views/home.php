@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,9 @@
   <meta name="description" content="Aprende inglés clínico con SmashCode, plataforma gamificada para enfermería SENA.">
   <link rel="stylesheet" href="<?= PROYECTO_PATH ?>/assets/css/estilos.css?v=<?= time() ?>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>/* Aplicar tema guardado antes del paint para evitar parpadeo */
+  (function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();
+  </script>
   <style>
     /* Panel aprendiz — tema claro Duolingo */
     .contenedor-aprendiz {
@@ -251,6 +254,14 @@
       </li>
       <?php endif; ?>
     </ul>
+
+    <!-- Botón cambio de tema al fondo de la barra lateral -->
+    <div style="padding: 16px 14px; border-top: 2px solid var(--borde-sutil); margin-top: auto; display: flex; justify-content: center;">
+      <button id="btn-cambiar-tema" class="btn-tema" style="width: 100%; justify-content: center;" aria-label="Cambiar a modo claro" title="Cambiar a modo claro">
+        <i class="fas fa-sun tema-icono"></i>
+        <span class="tema-label">Claro</span>
+      </button>
+    </div>
   </nav>
 
   <!-- ============ CONTENIDO PRINCIPAL ============ -->
@@ -267,8 +278,11 @@
         <i class="fas fa-fire"></i>
         Racha: 0 días
       </div>
-      <div class="avatar-usuario" title="<?= limpiar($usuario['nombre_completo']) ?>">
-        <?= strtoupper(substr($usuario['nombre_completo'], 0, 1)) ?>
+
+      <div style="margin-left: auto; display:flex; align-items:center; gap:16px;">
+        <div class="avatar-usuario" title="<?= limpiar($usuario['nombre_completo']) ?>">
+          <?= strtoupper(substr($usuario['nombre_completo'], 0, 1)) ?>
+        </div>
       </div>
     </header>
     <?php endif; ?>
@@ -429,5 +443,6 @@
     alert('🔒 Este nivel está bloqueado. Completa el nivel anterior con al menos 80% de progreso.');
   }
 </script>
+<script src="<?= PROYECTO_PATH ?>/assets/js/tema.js"></script>
 </body>
 </html>

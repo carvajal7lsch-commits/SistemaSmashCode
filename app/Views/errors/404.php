@@ -16,13 +16,16 @@ if (!function_exists('limpiar')) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 Página No Encontrada — SmashCode</title>
   <link rel="stylesheet" href="<?= $proyectoPath ?>/assets/css/estilos.css?v=<?= time() ?>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>/* Aplicar tema guardado antes del paint */
+  (function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();
+  </script>
   <style>
     /* Estilos del área de error 404 premium */
     .caja-error-404 {
@@ -32,8 +35,8 @@ if (!function_exists('limpiar')) {
       justify-content: center;
       text-align: center;
       padding: 60px 24px;
-      background: #1F2F36;
-      border: 2px solid #354952;
+      background: var(--blanco);
+      border: var(--borde);
       border-radius: 20px;
       max-width: 600px;
       margin: 40px auto 0;
@@ -83,6 +86,11 @@ if (!function_exists('limpiar')) {
         <span style="color:var(--texto-tenue);">Error 404</span>
       </div>
       <div style="margin-left: auto; display:flex; align-items:center; gap:16px;">
+        <!-- Botón cambio de tema -->
+        <button id="btn-cambiar-tema" class="btn-tema" aria-label="Cambiar a modo claro" title="Cambiar a modo claro">
+          <i class="fas fa-sun tema-icono"></i>
+          <span class="tema-label">Claro</span>
+        </button>
         <div class="avatar-usuario" style="border: 2px solid var(--verde); background: linear-gradient(135deg, var(--verde), var(--azul)); font-weight: 800; cursor: default;" title="<?= limpiar($nombre) ?>">
           <?= $avatar ?>
         </div>
@@ -186,6 +194,11 @@ if (!function_exists('limpiar')) {
 
   <main class="contenido-principal">
     <header class="barra-superior">
+      <!-- Botón cambio de tema -->
+      <button id="btn-cambiar-tema" class="btn-tema" aria-label="Cambiar a modo claro" title="Cambiar a modo claro">
+        <i class="fas fa-sun tema-icono"></i>
+        <span class="tema-label">Claro</span>
+      </button>
       <div class="avatar-usuario" title="<?= limpiar($nombre) ?>">
         <?= $avatar ?>
       </div>
@@ -278,6 +291,11 @@ if (!function_exists('limpiar')) {
 
   <main class="contenido-principal">
     <header class="barra-superior">
+      <!-- Botón cambio de tema -->
+      <button id="btn-cambiar-tema" class="btn-tema" aria-label="Cambiar a modo claro" title="Cambiar a modo claro">
+        <i class="fas fa-sun tema-icono"></i>
+        <span class="tema-label">Claro</span>
+      </button>
       <div class="avatar-usuario" title="<?= limpiar($nombre) ?>">
         <?= $avatar ?>
       </div>
@@ -322,9 +340,15 @@ if (!function_exists('limpiar')) {
 </div>
 
 <?php else: ?>
+<!-- Botón flotante de tema -->
+<button id="btn-cambiar-tema" class="btn-tema" aria-label="Cambiar a modo claro" title="Cambiar a modo claro"
+  style="position:fixed; top:16px; right:20px; z-index:9999;">
+  <i class="fas fa-sun tema-icono"></i>
+  <span class="tema-label">Claro</span>
+</button>
 <!-- Standalone premium 404 para usuarios no autenticados -->
 <main class="pagina-auth" style="display:flex; align-items:center; justify-content:center; min-height:100vh;">
-  <div class="caja-error-404" style="background:#131F24;">
+  <div class="caja-error-404" style="background: var(--blanco); border-color: var(--borde-sutil);">
     <!-- SVG Mascota Confundida -->
     <svg viewBox="0 0 100 100" width="120" height="120" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:16px;">
       <ellipse cx="50" cy="82" rx="22" ry="5" fill="#000" opacity="0.3" />
@@ -359,6 +383,6 @@ if (!function_exists('limpiar')) {
   </div>
 </main>
 <?php endif; ?>
-
+<script src="<?= $proyectoPath ?>/assets/js/tema.js"></script>
 </body>
 </html>
