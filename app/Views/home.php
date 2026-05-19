@@ -369,11 +369,8 @@
         <!-- CTA para visitantes / insignias para autenticados -->
         <?php if (!$autenticado): ?>
         <div class="caja-acceso">
-          <p>¡Crea un perfil para guardar tu progreso!</p>
-          <a href="<?= PROYECTO_PATH ?>/login?accion=registrar" class="btn btn-verde">
-            <i class="fas fa-user-plus"></i> CREAR PERFIL
-          </a>
-          <a href="<?= PROYECTO_PATH ?>/login" class="btn btn-blanco">INGRESAR</a>
+          <p>¡Ingresa para guardar tu progreso!</p>
+          <a href="<?= PROYECTO_PATH ?>/login" class="btn btn-verde">INGRESAR</a>
         </div>
         <?php else: ?>
         <div class="tarjeta-liga">

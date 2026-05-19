@@ -58,8 +58,13 @@
     </div>
 
     <!-- Panel del formulario -->
-    <div class="panel-auth-der">
-      <h2 class="titulo-formulario"><?= $accion === 'registrar' ? 'Crea tu cuenta' : 'Inicia sesión' ?></h2>
+    <div class="panel-auth-der" style="position: relative;">
+      <!-- Enlace para volver al inicio -->
+      <a href="<?= PROYECTO_PATH ?>/" style="position: absolute; top: 20px; right: 24px; color: var(--gris-medio); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--verde-acento)'" onmouseout="this.style.color='var(--gris-medio)'">
+        <i class="fas fa-arrow-left" style="margin-right: 4px;"></i> Volver al Inicio
+      </a>
+
+      <h2 class="titulo-formulario" style="margin-top: 10px;"><?= $accion === 'registrar' ? 'Crea tu cuenta' : 'Inicia sesión' ?></h2>
       <p class="subtitulo-formulario">Ingresa al mundo del inglés clínico para enfermería.</p>
 
       <!-- Tabs rol -->
