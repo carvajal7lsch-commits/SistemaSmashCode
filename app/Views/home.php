@@ -16,112 +16,156 @@
       display: flex;
       gap: 0;
       min-height: 100vh;
+      background-color: #F7F9FB; /* Light background */
     }
     .zona-mapa {
       flex: 1;
-      padding: 28px;
+      padding: 40px 28px;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .nodo-nivel-card {
-      background: var(--fondo-tarjeta);
-      border: 1px solid var(--borde-sutil);
-      border-radius: var(--radio-md);
-      padding: 14px 20px;
+    /* Estilos de la tarjeta de cabecera de nivel */
+    .seccion-nivel-card {
+      background: #58CC02; /* Duolingo Green */
+      border-radius: 16px;
+      padding: 16px 20px;
       display: flex;
       align-items: center;
-      gap: 14px;
-      cursor: pointer;
-      transition: var(--transicion);
-      margin-bottom: 8px;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .nodo-nivel-card:hover {
-      border-color: var(--verde-acento);
-      background: var(--fondo-hover);
-    }
-    .nodo-nivel-card .insignia-nivel {
-      font-size: 1.4rem;
-      width: 42px;
-      text-align: center;
-    }
-    .nodo-nivel-card .info-nivel .nombre-nivel {
-      font-size: var(--texto-sm);
-      font-weight: 600;
-      color: var(--texto-principal);
-    }
-    .nodo-nivel-card .info-nivel .sub-nivel {
-      font-size: var(--texto-xs);
-      color: var(--texto-secundario);
-    }
-    .nodo-nivel-card .btn-guia {
-      margin-left: auto;
-      background: rgba(30,132,73,0.15);
-      border: 1px solid var(--borde-activo);
-      color: var(--verde-acento);
-      padding: 5px 12px;
-      border-radius: var(--radio-full);
-      font-size: var(--texto-xs);
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transicion);
-    }
-    .nodo-nivel-card .btn-guia:hover {
-      background: var(--verde-salud);
+      gap: 16px;
+      width: 100%;
+      max-width: 580px;
       color: #fff;
+      box-shadow: 0 4px 0 #46A302;
+      position: relative;
+      z-index: 2;
     }
+    .seccion-nivel-card.bloqueado {
+      background: #E5E5E5;
+      color: #AFAFAF;
+      box-shadow: 0 4px 0 #CECECE;
+    }
+    .seccion-nivel-card .icono-etapa {
+      background: #fff;
+      border-radius: 8px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #58CC02;
+      flex-shrink: 0;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+    }
+    .seccion-nivel-card.bloqueado .icono-etapa {
+      color: #AFAFAF;
+    }
+    .seccion-nivel-card .info-etapa {
+      flex: 1;
+    }
+    .seccion-nivel-card .texto-etapa {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      opacity: 0.9;
+    }
+    .seccion-nivel-card .titulo-etapa {
+      font-size: 1.3rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+    .seccion-nivel-card .btn-guia {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .seccion-nivel-card .btn-guia:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: #fff;
+    }
+    .seccion-nivel-card.bloqueado .btn-guia {
+      display: none;
+    }
+    
     /* ── Línea del mapa ── */
     .linea-mapa {
-      width: 4px; height: 32px;
-      background: var(--gris-claro);
-      margin: 0 auto; border-radius: 2px;
+      width: 8px;
+      height: 48px;
+      background: #E5E5E5;
+      margin: -2px 0;
+      border-radius: 0;
+      z-index: 1;
     }
     /* ── Grupo de cada nodo (burbuja + pingüino lateral) ── */
     .grupo-rap {
       display: flex; flex-direction: column;
       align-items: center; position: relative;
-      margin-bottom: 4px;
-    }
-    /* Pingüino al costado del nodo activo */
-    .pinguino-mapa {
-      position: absolute;
-      right: -100px; bottom: 0;
-      width: 72px;
-      animation: flotar 2.5s ease-in-out infinite;
-      pointer-events: none;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+      margin-bottom: 24px;
+      z-index: 2;
     }
     /* Burbuja circular del nodo */
     .burbuja-rap {
-      width: 72px; height: 72px; border-radius: 50%;
+      width: 80px; height: 80px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.7rem; font-weight: 900;
+      font-size: 1.8rem; font-weight: 900;
       cursor: pointer; transition: transform 0.15s;
-      border: 4px solid transparent; position: relative;
+      position: relative;
+      background: #E5E5E5;
+      border: 6px solid #F7F9FB;
+      box-shadow: 0 0 0 4px #E5E5E5, 0 6px 0 4px #CECECE;
+      color: #AFAFAF;
     }
-    .burbuja-rap:hover { transform: scale(1.08); }
+    .burbuja-rap:hover { transform: scale(1.05); }
+    
+    /* Estado completado (Dorado) */
     .burbuja-rap.completado {
-      background: var(--verde); border-color: var(--verde-oscuro);
-      color: #fff; box-shadow: 0 4px 0 var(--verde-oscuro);
+      background: #FFC800;
+      box-shadow: 0 0 0 4px #FFC800, 0 6px 0 4px #E5B400;
+      color: #fff;
     }
+    /* Estado disponible/en progreso (Dorado con aura) */
     .burbuja-rap.disponible, .burbuja-rap.en_progreso {
-      background: var(--amarillo); border-color: #D4A800;
-      color: #fff; box-shadow: 0 4px 0 #D4A800;
-      animation: pulsar-duo 2s infinite;
+      background: #FFC800;
+      box-shadow: 0 0 0 4px #FFC800, 0 6px 0 4px #E5B400, 0 0 20px 8px rgba(255, 200, 0, 0.4);
+      color: #fff;
+      animation: bounce 2s infinite ease-in-out;
     }
+    /* Estado bloqueado (Gris) - default */
     .burbuja-rap.bloqueado {
-      background: var(--gris-claro); border-color: #C0C0C0;
-      color: var(--gris-medio); cursor: not-allowed;
-      box-shadow: 0 4px 0 #C0C0C0;
+      cursor: not-allowed;
     }
+    .burbuja-rap.bloqueado:hover { transform: none; }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
     .etiqueta-burbuja {
-      font-size: 0.7rem; font-weight: 800;
-      color: var(--gris-medio); margin-top: 6px;
-      text-transform: uppercase; letter-spacing: 0.06em;
+      font-size: 0.85rem; font-weight: 800;
+      color: #AFAFAF; margin-top: 20px;
+      text-transform: uppercase; letter-spacing: 1px;
     }
     .burbuja-rap.disponible ~ .etiqueta-burbuja,
-    .burbuja-rap.en_progreso ~ .etiqueta-burbuja { color: var(--verde-oscuro); }
+    .burbuja-rap.en_progreso ~ .etiqueta-burbuja { color: #58CC02; }
+    .burbuja-rap.completado ~ .etiqueta-burbuja { color: #FFC800; }
     /* Panel derecho */
     .panel-lateral-derecho {
       width: 320px; flex-shrink: 0;
@@ -334,21 +378,21 @@
         ?>
 
         <!-- Cabecera de sección (barra verde estilo Duolingo) -->
-        <div class="seccion-nivel-card">
-          <span style="font-size:1.2rem;"><?= $icono ?></span>
-          <div>
-            <div style="font-size:0.7rem;opacity:0.85;">ETAPA 1, SECCIÓN <?= $nivel['orden'] ?></div>
-            <div style="font-size:0.95rem;"><?= limpiar($nivel['nombre']) ?></div>
+        <div class="seccion-nivel-card <?= $estado === 'bloqueado' ? 'bloqueado' : '' ?>">
+          <div class="icono-etapa"><?= $icono ?></div>
+          <div class="info-etapa">
+            <div class="texto-etapa">ETAPA 1, SECCIÓN <?= $nivel['orden'] ?></div>
+            <h2 class="titulo-etapa"><?= limpiar($nivel['nombre']) ?></h2>
           </div>
-          <?php if ($estado !== 'bloqueado'): ?>
-          <button class="btn-guia" style="margin-left:auto;">
+          <button class="btn-guia">
             <i class="fas fa-book-open"></i> GUÍA
           </button>
-          <?php endif; ?>
         </div>
 
-        <!-- Línea + nodo con pingüino al costado si es el activo -->
+        <!-- Línea -->
         <div class="linea-mapa"></div>
+        
+        <!-- Nodo -->
         <div class="grupo-rap">
           <div class="burbuja-rap <?= $estado ?>"
                onclick="<?= $estado !== 'bloqueado' ? "window.location='{$urlRap}'" : "mostrarMensajeBloqueado()" ?>"
@@ -359,34 +403,18 @@
           </div>
 
           <?php if ($esPrincipal): ?>
-          <!-- Pingüino mascota aparece junto al nodo activo -->
-          <svg class="pinguino-mapa" viewBox="0 0 110 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="55" cy="78" rx="38" ry="44" fill="#1A1A2E"/>
-            <ellipse cx="55" cy="84" rx="24" ry="30" fill="#FFFFFF"/>
-            <ellipse cx="55" cy="38" rx="28" ry="28" fill="#1A1A2E"/>
-            <ellipse cx="55" cy="42" rx="18" ry="18" fill="#FFFFFF"/>
-            <circle cx="47" cy="36" r="6" fill="#FFFFFF"/><circle cx="47" cy="36" r="3.5" fill="#1A1A2E"/><circle cx="48.5" cy="34.5" r="1.2" fill="#FFFFFF"/>
-            <circle cx="63" cy="36" r="6" fill="#FFFFFF"/><circle cx="63" cy="36" r="3.5" fill="#1A1A2E"/><circle cx="64.5" cy="34.5" r="1.2" fill="#FFFFFF"/>
-            <ellipse cx="55" cy="48" rx="6" ry="4" fill="#FF9600"/>
-            <ellipse cx="20" cy="75" rx="10" ry="22" fill="#1A1A2E" transform="rotate(-15 20 75)"/>
-            <ellipse cx="90" cy="75" rx="10" ry="22" fill="#1A1A2E" transform="rotate(15 90 75)"/>
-            <ellipse cx="43" cy="120" rx="12" ry="6" fill="#FF9600"/>
-            <ellipse cx="67" cy="120" rx="12" ry="6" fill="#FF9600"/>
-            <rect x="34" y="14" width="42" height="10" rx="5" fill="#FFFFFF"/>
-            <rect x="51" y="8" width="8" height="20" rx="4" fill="#FF4B4B"/>
-            <rect x="34" y="16" width="42" height="4" rx="2" fill="#E5E5E5"/>
-          </svg>
-          <?php endif; ?>
-
-          <?php if ($esPrincipal): ?>
-            <span class="etiqueta-burbuja" style="color:var(--verde-oscuro);">EMPEZAR</span>
+            <span class="etiqueta-burbuja">EMPEZAR</span>
           <?php elseif ($estado === 'completado'): ?>
-            <span class="etiqueta-burbuja" style="color:var(--verde);">COMPLETADO</span>
+            <span class="etiqueta-burbuja">COMPLETADO</span>
           <?php elseif ($estado === 'bloqueado'): ?>
             <span class="etiqueta-burbuja">BLOQUEADO</span>
           <?php endif; ?>
         </div>
-        <div class="linea-mapa"></div>
+        
+        <!-- Línea final hacia el siguiente nodo si no es el último -->
+        <?php if ($nivel['orden'] < count($niveles)): ?>
+          <div class="linea-mapa"></div>
+        <?php endif; ?>
 
         <?php endforeach; ?>
       </section>
