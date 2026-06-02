@@ -10,196 +10,130 @@
   <script>/* Aplicar tema guardado antes del paint para evitar parpadeo */
   (function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();
   </script>
-  <style>
-    /* Panel aprendiz — tema claro Duolingo */
-    .contenedor-aprendiz {
-      display: flex;
-      gap: 0;
-      min-height: 100vh;
-      background-color: #F7F9FB; /* Light background */
-    }
-    .zona-mapa {
-      flex: 1;
-      padding: 40px 28px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    /* Estilos de la tarjeta de cabecera de nivel */
-    .seccion-nivel-card {
-      background: #58CC02; /* Duolingo Green */
-      border-radius: 16px;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      width: 100%;
-      max-width: 580px;
-      color: #fff;
-      box-shadow: 0 4px 0 #46A302;
-      position: relative;
-      z-index: 2;
-    }
-    .seccion-nivel-card.bloqueado {
-      background: #E5E5E5;
-      color: #AFAFAF;
-      box-shadow: 0 4px 0 #CECECE;
-    }
-    .seccion-nivel-card .icono-etapa {
-      background: #fff;
-      border-radius: 8px;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      color: #58CC02;
-      flex-shrink: 0;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.1);
-    }
-    .seccion-nivel-card.bloqueado .icono-etapa {
-      color: #AFAFAF;
-    }
-    .seccion-nivel-card .info-etapa {
-      flex: 1;
-    }
-    .seccion-nivel-card .texto-etapa {
-      font-size: 0.8rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-      opacity: 0.9;
-    }
-    .seccion-nivel-card .titulo-etapa {
-      font-size: 1.3rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 0;
-    }
-    .seccion-nivel-card .btn-guia {
-      background: transparent;
-      border: 2px solid rgba(255,255,255,0.4);
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-    .seccion-nivel-card .btn-guia:hover {
-      background: rgba(255,255,255,0.15);
-      border-color: #fff;
-    }
-    .seccion-nivel-card.bloqueado .btn-guia {
-      display: none;
-    }
-    
-    /* ── Línea del mapa ── */
-    .linea-mapa {
-      width: 8px;
-      height: 48px;
-      background: #E5E5E5;
-      margin: -2px 0;
-      border-radius: 0;
-      z-index: 1;
-    }
-    /* ── Grupo de cada nodo (burbuja + pingüino lateral) ── */
-    .grupo-rap {
-      display: flex; flex-direction: column;
-      align-items: center; position: relative;
-      margin-bottom: 24px;
-      z-index: 2;
-    }
-    /* Burbuja circular del nodo */
-    .burbuja-rap {
-      width: 80px; height: 80px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.8rem; font-weight: 900;
-      cursor: pointer; transition: transform 0.15s;
-      position: relative;
-      background: #E5E5E5;
-      border: 6px solid #F7F9FB;
-      box-shadow: 0 0 0 4px #E5E5E5, 0 6px 0 4px #CECECE;
-      color: #AFAFAF;
-    }
-    .burbuja-rap:hover { transform: scale(1.05); }
-    
-    /* Estado completado (Dorado) */
-    .burbuja-rap.completado {
-      background: #FFC800;
-      box-shadow: 0 0 0 4px #FFC800, 0 6px 0 4px #E5B400;
-      color: #fff;
-    }
-    /* Estado disponible/en progreso (Dorado con aura) */
-    .burbuja-rap.disponible, .burbuja-rap.en_progreso {
-      background: #FFC800;
-      box-shadow: 0 0 0 4px #FFC800, 0 6px 0 4px #E5B400, 0 0 20px 8px rgba(255, 200, 0, 0.4);
-      color: #fff;
-      animation: bounce 2s infinite ease-in-out;
-    }
-    /* Estado bloqueado (Gris) - default */
-    .burbuja-rap.bloqueado {
-      cursor: not-allowed;
-    }
-    .burbuja-rap.bloqueado:hover { transform: none; }
-    
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+    /* Variables from reference */
+    :root {
+      --duo-green: #58cc02;
+      --duo-green-dark: #46a302;
+      --duo-blue: #1cb0f6;
+      --duo-blue-dark: #1899d6;
+      --duo-gray: #e5e5e5;
+      --duo-gray-dark: #afafaf;
+      --duo-text: #4b4b4b;
     }
 
-    .etiqueta-burbuja {
-      font-size: 0.85rem; font-weight: 800;
-      color: #AFAFAF; margin-top: 20px;
-      text-transform: uppercase; letter-spacing: 1px;
+    /* Main Content Area */
+    .learning-path-view {
+      display: flex;
+      padding: 20px 40px;
+      gap: 40px;
+      background: #fff;
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
     }
-    .burbuja-rap.disponible ~ .etiqueta-burbuja,
-    .burbuja-rap.en_progreso ~ .etiqueta-burbuja { color: #58CC02; }
-    .burbuja-rap.completado ~ .etiqueta-burbuja { color: #FFC800; }
-    /* Panel derecho */
-    .panel-lateral-derecho {
-      width: 320px; flex-shrink: 0;
-      padding: 28px 20px; display: flex;
-      flex-direction: column; gap: 14px;
-      border-left: 2px solid var(--borde);
+
+    .main-column {
+      flex: 1;
+      max-width: 600px;
+      margin: 0 auto;
     }
-    .tarjeta-liga {
-      background: var(--blanco); border: 2px solid var(--borde);
-      border-radius: var(--radio); padding: 16px;
+
+    /* Unit Header */
+    .unit-header {
+      background: var(--duo-green);
+      border-radius: 15px;
+      padding: 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 0 var(--duo-green-dark);
     }
-    .tarjeta-liga .titulo-tarjeta {
-      font-size: 0.78rem; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.06em;
-      color: var(--gris-medio); margin-bottom: 8px;
-      display: flex; align-items: center; gap: 8px;
+    .unit-info .back-btn { font-size: 14px; font-weight: 800; opacity: 0.8; margin-bottom: 5px; }
+    .unit-info h1 { font-size: 24px; font-weight: 800; margin: 0; }
+    .guide-btn {
+      background: transparent; border: 2px solid rgba(255,255,255,0.5);
+      color: white; padding: 10px 15px; border-radius: 12px;
+      font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 10px;
     }
-    .tarjeta-liga .titulo-tarjeta a { margin-left:auto; color:var(--azul); font-size:0.7rem; }
-    .tarjeta-liga p { font-size: 0.82rem; color: var(--gris-medio); }
-    .desafio-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 0; border-bottom: 2px solid var(--borde);
+
+    /* Path Container */
+    .path-container {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 60px; padding-bottom: 100px;
     }
-    .desafio-item:last-child { border-bottom: none; }
-    .desafio-texto { flex:1; font-size:0.82rem; font-weight:600; color:var(--gris-texto); }
-    .mini-barra { height:8px; background:var(--gris-claro); border-radius:var(--radio-full); overflow:hidden; margin-top:4px; }
-    .mini-barra .relleno { height:100%; background:var(--naranja); border-radius:var(--radio-full); }
-    .mini-texto { font-size:0.65rem; color:var(--gris-medio); margin-top:2px; }
-    .caja-acceso {
-      background: var(--blanco); border: 2px solid var(--borde);
-      border-radius: var(--radio); padding: 20px;
-      display: flex; flex-direction: column; gap: 10px; text-align:center;
+    .path-item { position: relative; width: 100%; display: flex; justify-content: center; overflow: visible; z-index: 1; }
+    .path-item.current { z-index: 50; }
+    .path-item.offset-right { transform: translateX(40px); }
+    .path-item.offset-left { transform: translateX(-40px); }
+
+    .node-wrapper { position: relative; display: flex; justify-content: center; align-items: center; }
+    .node-wrapper::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); width: 82px; height: 82px;
+      background: transparent; border: 8px solid #e5e5e5; border-radius: 50%;
+      z-index: 0; pointer-events: none;
     }
-    .caja-acceso p { font-size:0.85rem; color:var(--gris-texto); font-weight:600; margin-bottom:4px; }
+    .path-item.current .node-wrapper::before { display: none; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-5px); }
+    }
+    .node-wrapper .tooltip {
+      position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
+      background: white; border: 2px solid var(--duo-gray); padding: 5px 15px;
+      border-radius: 12px; font-weight: 800; font-size: 14px; color: var(--duo-green);
+      box-shadow: 0 2px 0 var(--duo-gray); animation: bounce 2s infinite ease-in-out;
+      white-space: nowrap; z-index: 10;
+    }
+    .node-wrapper .tooltip::after {
+      content: ''; position: absolute; bottom: -10px; left: 50%;
+      transform: translateX(-50%); border-left: 10px solid transparent;
+      border-right: 10px solid transparent; border-top: 10px solid white;
+    }
+
+    .node {
+      position: relative; z-index: 1; width: 70px; height: 65px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 30px; cursor: pointer; transition: all 0.1s ease;
+    }
+    .node.star { background: var(--duo-green); color: white; box-shadow: 0 6px 0 var(--duo-green-dark); }
+    .node.star:hover { transform: translateY(2px); box-shadow: 0 4px 0 var(--duo-green-dark); }
+    .node.star:active { transform: translateY(6px); box-shadow: 0 0 0 var(--duo-green-dark); }
+    .node.star-locked { background: var(--duo-gray); color: var(--duo-gray-dark); box-shadow: 0 6px 0 #bcbcbc; cursor: not-allowed; }
+    .node.completed { background: var(--duo-green); color: white; box-shadow: 0 6px 0 var(--duo-green-dark); }
+    .node.chest-complete { background: #ffd700; color: white; box-shadow: 0 6px 0 #cc9900; }
+    .node.trophy-complete { background: var(--duo-green); color: white; box-shadow: 0 6px 0 var(--duo-green-dark); }
+
+    .progress-ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
+
+    /* Side Column */
+    .side-column { width: 350px; flex-shrink: 0; }
+    .right-stats-bar { display: flex; justify-content: space-between; padding: 10px 0; margin-bottom: 20px; }
+    .stat { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 16px; color: var(--duo-text); }
+    .stat.fire { color: #ff9600; }
+    .stat.gem { color: var(--duo-blue); }
+    .stat.heart { color: #ff4b4b; }
+
+    .card { border: 2px solid var(--duo-gray); border-radius: 15px; padding: 15px; margin-bottom: 20px; background: white; }
+    .card h3 { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--duo-text); }
+    .promo-content { display: flex; align-items: center; gap: 15px; }
+    .lock-icon { width: 50px; height: 50px; background: var(--duo-gray); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--duo-gray-dark); font-size: 20px; }
+
+    .daily-card .card-header { display: flex; justify-content: space-between; align-items: center; }
+    .daily-card a { color: var(--duo-blue); text-decoration: none; font-weight: 800; font-size: 12px; }
+    .challenge-item { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+    .challenge-item i { color: #ff9600; font-size: 24px; }
+    .mini-progress-bar { width: 200px; height: 12px; background: var(--duo-gray); border-radius: 10px; position: relative; margin-top: 5px; }
+    .mini-progress-fill { height: 100%; background: #ff9600; border-radius: 10px; }
+    .mini-progress-bar i { position: absolute; right: -10px; top: -5px; font-size: 14px; color: #cd7f32; }
+    
+    .signup-card { text-align: center; }
+    .signup-card button { width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; margin-top: 10px; cursor: pointer; border: none; }
+    .btn-create { background: var(--duo-green); color: white; box-shadow: 0 4px 0 var(--duo-green-dark); }
+    .btn-login { background: var(--duo-blue); color: white; box-shadow: 0 4px 0 var(--duo-blue-dark); }
   </style>
 </head>
 <body>
@@ -328,140 +262,201 @@
           <?= strtoupper(substr($usuario['nombre_completo'], 0, 1)) ?>
         </div>
       </div>
-    </header>
-    <?php endif; ?>
-
-    <!-- Zona del mapa + panel derecho -->
-    <div class="contenedor-aprendiz">
+    </h    <!-- Zona del mapa + panel derecho -->
+    <div class="learning-path-view">
 
       <!-- MAPA DE PROGRESO -->
-      <section class="zona-mapa">
+      <div class="main-column">
+        
         <?php
-        $primerActivo = true; // Controla en cuál nodo aparece el pingüino
-        foreach ($niveles as $nivel):
-          $estado = $autenticado
-              ? (isset($mapaProgreso[$nivel['rap_id']])
-                  ? ($mapaProgreso[$nivel['rap_id']]['completado'] ? 'completado' : ($mapaProgreso[$nivel['rap_id']]['porcentaje'] > 0 ? 'en_progreso' : 'disponible'))
-                  : ($nivel['orden'] === 1 ? 'disponible' : 'bloqueado')) // Nivel 1 siempre disponible
-              : ($nivel['orden'] === 1 ? 'disponible' : 'bloqueado');
+        // Encontrar la sección (nivel) activa actual
+        $seccionActiva = null;
+        if ($autenticado) {
+            foreach ($niveles as $nivel) {
+                if (!isset($mapaProgreso[$nivel['rap_id']]) || !$mapaProgreso[$nivel['rap_id']]['completado']) {
+                    $seccionActiva = $nivel;
+                    break;
+                }
+            }
+        }
+        if (!$seccionActiva) {
+            $seccionActiva = $niveles[0] ?? ['orden' => 1, 'nombre' => 'Conceptos Básicos'];
+        }
+        ?>
+        
+        <!-- Green Header Section -->
+        <div class="unit-header">
+            <div class="unit-info">
+                <div class="back-btn" id="header-competencia">
+                    <i class="fas fa-arrow-left"></i> ETAPA 1, SECCIÓN <?= $seccionActiva['orden'] ?>
+                </div>
+                <h1 id="header-title"><?= limpiar($seccionActiva['nombre']) ?></h1>
+            </div>
+            <button class="guide-btn"><i class="fas fa-book-open"></i> GUÍA</button>
+        </div>
 
-          // Lógica de desbloqueo avanzado
-          if ($autenticado && $estado === 'bloqueado' && $nivel['orden'] > 1) {
-              $anteriorOrden = $nivel['orden'] - 1;
-              $nivelAnterior = array_filter($niveles, fn($n) => $n['orden'] === $anteriorOrden);
-              $nivelAnterior = reset($nivelAnterior);
-              if ($nivelAnterior && isset($mapaProgreso[$nivelAnterior['rap_id']])) {
-                  if ($mapaProgreso[$nivelAnterior['rap_id']]['porcentaje'] >= 80) {
-                      $estado = 'disponible';
+        <!-- Dynamic Path -->
+        <div class="path-container" id="path-container">
+            <?php
+            $primerActivo = true; // Para saber cuál es el nodo actual (para el tooltip EMPEZAR y el progreso)
+            $OFFSETS = ['', '', 'offset-right', 'offset-left', '', 'offset-right'];
+            $todosCompletados = true;
+
+            foreach ($niveles as $i => $nivel):
+              $estado = $autenticado
+                  ? (isset($mapaProgreso[$nivel['rap_id']])
+                      ? ($mapaProgreso[$nivel['rap_id']]['completado'] ? 'completado' : ($mapaProgreso[$nivel['rap_id']]['porcentaje'] > 0 ? 'en_progreso' : 'disponible'))
+                      : ($nivel['orden'] === 1 ? 'disponible' : 'bloqueado')) // Nivel 1 siempre disponible
+                  : ($nivel['orden'] === 1 ? 'disponible' : 'bloqueado');
+
+              // Lógica de desbloqueo avanzado
+              if ($autenticado && $estado === 'bloqueado' && $nivel['orden'] > 1) {
+                  $anteriorOrden = $nivel['orden'] - 1;
+                  $nivelAnterior = array_filter($niveles, fn($n) => $n['orden'] === $anteriorOrden);
+                  $nivelAnterior = reset($nivelAnterior);
+                  if ($nivelAnterior && isset($mapaProgreso[$nivelAnterior['rap_id']])) {
+                      if ($mapaProgreso[$nivelAnterior['rap_id']]['porcentaje'] >= 80) {
+                          $estado = 'disponible';
+                      }
                   }
               }
-          }
 
-          $iconos = ['🏥','📋','❤️','💊','🚨','⭐'];
-          $icono  = $iconos[$nivel['orden'] - 1] ?? '📘';
+              $offsetClase = $OFFSETS[$i % count($OFFSETS)];
+              $esPrincipal = ($estado === 'disponible' || $estado === 'en_progreso') && $primerActivo;
+              if ($esPrincipal) $primerActivo = false;
+              if ($estado !== 'completado') $todosCompletados = false;
 
-          /* El pingüino aparece solo en el primer nodo disponible/en progreso */
-          $esPrincipal = ($estado === 'disponible' || $estado === 'en_progreso') && $primerActivo;
-          if ($esPrincipal) $primerActivo = false;
+              $urlRap = $autenticado && $estado !== 'bloqueado'
+                  ? PROYECTO_PATH . '/modulos/aprendiz/rap.php?id=' . urlencode($nivel['rap_id'])
+                  : '#';
 
-          /* Ícono dentro de la burbuja según estado */
-          $iconoBurbuja = match($estado) {
-            'completado'  => '<i class="fas fa-check" style="font-size:1.6rem;"></i>',
-            'en_progreso',
-            'disponible'  => '<i class="fas fa-star"  style="font-size:1.6rem;"></i>',
-            default       => '<i class="fas fa-lock"  style="font-size:1.4rem;"></i>',
-          };
+              // Clases e íconos exactos de la referencia
+              $nodeClass = '';
+              $iconHtml = '';
+              $isActive = false;
 
-          $urlRap = $autenticado && $estado !== 'bloqueado'
-              ? PROYECTO_PATH . '/modulos/aprendiz/rap.php?id=' . urlencode($nivel['rap_id'])
-              : '#';
-        ?>
+              $iconosRefs = ['fa-star', 'fa-book', 'fa-star', 'fa-star', 'fa-heart', 'fa-star'];
+              $iconoAct = $iconosRefs[$i % count($iconosRefs)];
 
-        <!-- Cabecera de sección (barra verde estilo Duolingo) -->
-        <div class="seccion-nivel-card <?= $estado === 'bloqueado' ? 'bloqueado' : '' ?>">
-          <div class="icono-etapa"><?= $icono ?></div>
-          <div class="info-etapa">
-            <div class="texto-etapa">ETAPA 1, SECCIÓN <?= $nivel['orden'] ?></div>
-            <h2 class="titulo-etapa"><?= limpiar($nivel['nombre']) ?></h2>
-          </div>
-          <button class="btn-guia">
-            <i class="fas fa-book-open"></i> GUÍA
-          </button>
+              if ($estado === 'completado') {
+                  $nodeClass = 'star completed';
+                  $iconHtml = '<i class="fas fa-check"></i>';
+              } else if ($esPrincipal) {
+                  $nodeClass = 'star';
+                  $iconHtml = '<i class="fas '.$iconoAct.'"></i>';
+                  $isActive = true;
+              } else {
+                  $nodeClass = 'star-locked';
+                  $iconHtml = '<i class="fas '.$iconoAct.'"></i>';
+              }
+            ?>
+            <div class="path-item <?= $isActive ? 'current' : 'locked' ?> <?= $offsetClase ?>">
+                <div class="node-wrapper" 
+                     onclick="<?= $estado !== 'bloqueado' ? "window.location='{$urlRap}'" : "mostrarMensajeBloqueado()" ?>" 
+                     title="<?= limpiar($nivel['nombre']) ?>">
+                    
+                    <?php if ($isActive): ?>
+                        <span class="tooltip" id="start-tooltip">EMPEZAR</span>
+                    <?php endif; ?>
+                    
+                    <div class="node <?= $nodeClass ?>" <?= $isActive ? 'id="star-node"' : '' ?>>
+                        <?= $iconHtml ?>
+                    </div>
+                    
+                    <?php if ($isActive): 
+                        // Progress ring SVG
+                        $pct = isset($mapaProgreso[$nivel['rap_id']]) ? $mapaProgreso[$nivel['rap_id']]['porcentaje'] : 0;
+                        $radius = 45;
+                        $circumference = 2 * pi() * $radius;
+                        $dashoffset = $circumference - ($pct / 100) * $circumference;
+                    ?>
+                    <svg class="progress-ring" width="100" height="100" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="<?= $radius ?>" fill="none" stroke="#e5e5e5" stroke-width="8"/>
+                        <circle cx="50" cy="50" r="<?= $radius ?>" fill="none" stroke="#58cc02" stroke-width="8"
+                                stroke-dasharray="<?= $circumference ?>" stroke-dashoffset="<?= $dashoffset ?>"
+                                stroke-linecap="round" transform="rotate(-90 50 50)"/>
+                    </svg>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            
+            <!-- Cofre final -->
+            <?php
+              $chestIndex = count($niveles);
+              $chestOffset = $OFFSETS[$chestIndex % count($OFFSETS)];
+            ?>
+            <div class="path-item <?= $todosCompletados ? 'completed' : 'locked' ?> <?= $chestOffset ?>">
+                <div class="node-wrapper">
+                    <div class="node <?= $todosCompletados ? 'chest-complete' : 'chest' ?>">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trofeo final -->
+            <?php
+              $trophyIndex = count($niveles) + 1;
+              $trophyOffset = $OFFSETS[$trophyIndex % count($OFFSETS)];
+            ?>
+            <div class="path-item <?= $todosCompletados ? 'completed' : 'locked' ?> <?= $trophyOffset ?>">
+                <div class="node-wrapper">
+                    <div class="node <?= $todosCompletados ? 'trophy-complete' : 'trophy' ?>">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-        <!-- Línea -->
-        <div class="linea-mapa"></div>
-        
-        <!-- Nodo -->
-        <div class="grupo-rap">
-          <div class="burbuja-rap <?= $estado ?>"
-               onclick="<?= $estado !== 'bloqueado' ? "window.location='{$urlRap}'" : "mostrarMensajeBloqueado()" ?>"
-               title="<?= limpiar($nivel['rap_titulo']) ?>"
-               role="button"
-               tabindex="<?= $estado === 'bloqueado' ? '-1' : '0' ?>">
-            <?= $iconoBurbuja ?>
-          </div>
-
-          <?php if ($esPrincipal): ?>
-            <span class="etiqueta-burbuja">EMPEZAR</span>
-          <?php elseif ($estado === 'completado'): ?>
-            <span class="etiqueta-burbuja">COMPLETADO</span>
-          <?php elseif ($estado === 'bloqueado'): ?>
-            <span class="etiqueta-burbuja">BLOQUEADO</span>
-          <?php endif; ?>
-        </div>
-        
-        <!-- Línea final hacia el siguiente nodo si no es el último -->
-        <?php if ($nivel['orden'] < count($niveles)): ?>
-          <div class="linea-mapa"></div>
-        <?php endif; ?>
-
-        <?php endforeach; ?>
-      </section>
+      </div>
 
       <!-- PANEL LATERAL DERECHO -->
-      <aside class="panel-lateral-derecho" aria-label="Panel de gamificación">
-
-        <!-- ¡Compite en las ligas! -->
-        <div class="tarjeta-liga">
-          <div class="titulo-tarjeta">🏆 ¡Compite en las Ligas!</div>
-          <p>Completa lecciones para empezar a competir</p>
+      <aside class="side-column" aria-label="Panel de gamificación">
+          
+        <div class="right-stats-bar">
+            <div class="stat"><img src="https://d35aaqx5ub95lt.cloudfront.net/images/flags/us.svg" width="25" alt="EN"></div>
+            <div class="stat fire"><i class="fas fa-fire"></i> <span>0</span></div>
+            <div class="stat gem"><i class="fas fa-gem"></i> <span>0</span></div>
+            <div class="stat xp" style="color:var(--duo-blue);"><i class="fas fa-bolt"></i> <span><?= $autenticado ? formatearXP($usuario['xp_puntos']) : '0' ?> XP</span></div>
+            <div class="stat heart"><i class="fas fa-heart"></i> <span>5</span></div>
         </div>
 
-        <!-- Desafíos del día -->
-        <div class="tarjeta-liga">
-          <div class="titulo-tarjeta">
-            ⚡ Desafíos del día
-            <a href="#">VER TODOS</a>
-          </div>
-          <div class="desafio-item">
-            <span style="font-size:1.3rem; color:var(--naranja);">⚡</span>
-            <div class="desafio-texto">
-              Gana 10 XP
-              <div class="mini-barra">
-                <div class="relleno" style="width:<?= $autenticado ? min(100,($usuario['xp_puntos']??0)/10*100) : 0 ?>%"></div>
-              </div>
-              <div class="mini-texto"><?= $autenticado ? min(10,$usuario['xp_puntos']??0) : 0 ?> / 10</div>
+        <div class="card promo-card">
+            <h3>¡Compite en las Ligas!</h3>
+            <div class="promo-content">
+                <div class="lock-icon"><i class="fas fa-lock"></i></div>
+                <p style="font-size:14px;color:var(--duo-text-light);">Completa lecciones para empezar a competir</p>
             </div>
-            <span style="font-size:1.4rem;">🎁</span>
-          </div>
         </div>
 
-        <!-- CTA para visitantes / insignias para autenticados -->
-        <?php if (!$autenticado): ?>
-        <div class="caja-acceso">
-          <p>¡Ingresa para guardar tu progreso!</p>
-          <a href="<?= PROYECTO_PATH ?>/login" class="btn btn-verde">INGRESAR</a>
+        <div class="card daily-card">
+            <div class="card-header">
+                <h3>Desafíos del día</h3>
+                <a href="#">VER TODOS</a>
+            </div>
+            <div class="challenge-item">
+                <i class="fas fa-bolt"></i>
+                <div style="flex:1;">
+                    <p style="font-size:14px;font-weight:600;margin-bottom:4px;">Gana 10 XP</p>
+                    <div class="mini-progress-bar">
+                        <div class="mini-progress-fill" style="width: <?= $autenticado ? min(100,($usuario['xp_puntos']??0)/10*100) : 0 ?>%;"></div>
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div style="font-size:11px;color:var(--duo-text-light);margin-top:4px;"><?= $autenticado ? min(10,$usuario['xp_puntos']??0) : 0 ?> / 10</div>
+                </div>
+            </div>
         </div>
-        <?php else: ?>
-        <div class="tarjeta-liga">
-          <div class="titulo-tarjeta">🎖 Mis Insignias</div>
-          <p>Completa RAPs y quizzes para ganar insignias.</p>
+
+        <?php if (!$autenticado): ?>
+        <div class="card signup-card">
+            <h3>¡Crea un perfil para guardar tu progreso!</h3>
+            <a href="<?= PROYECTO_PATH ?>/login" style="text-decoration:none;"><button class="btn-create">INGRESAR</button></a>
         </div>
         <?php endif; ?>
 
       </aside>
-    </div><!-- /contenedor-aprendiz -->
+
+    </div><!-- /learning-path-view -->
   </main>
 </div><!-- /contenedor-app -->
 
