@@ -10,6 +10,7 @@
   <script>/* Aplicar tema guardado antes del paint para evitar parpadeo */
   (function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();
   </script>
+  <style>
     /* Variables from reference */
     :root {
       --duo-green: #58cc02;
