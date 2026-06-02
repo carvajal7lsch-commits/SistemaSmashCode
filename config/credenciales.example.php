@@ -17,5 +17,5 @@ define('SMTP_USER', 'smascode@gmail.com');
 define('SMTP_PASS', ''); // Tu Contraseña de Aplicación de Gmail
 define('SMTP_PORT', 587);
 
-// Configuración de JWT
-define('JWT_SECRET', 'SmashCode@SENA_2026_JWT_SecretKey!');
+// Configuración de JWT (Genera una clave segura con: php -r "echo bin2hex(random_bytes(48));")
+define('JWT_SECRET', 'TU_CLAVE_JWT_SECRETA_AQUI');
