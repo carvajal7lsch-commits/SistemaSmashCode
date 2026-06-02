@@ -262,7 +262,10 @@
           <?= strtoupper(substr($usuario['nombre_completo'], 0, 1)) ?>
         </div>
       </div>
-    </h    <!-- Zona del mapa + panel derecho -->
+    </header>
+    <?php endif; ?>
+
+    <!-- Zona del mapa + panel derecho -->
     <div class="learning-path-view">
 
       <!-- MAPA DE PROGRESO -->
