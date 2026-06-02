@@ -24,6 +24,11 @@ $app = new \App\Core\App();
 
 // --- Panel Principal (Aprendiz) ---
 $app->get('/', 'HomeController@index');
+$app->get('/aprendiz/vocabulario', 'AprendizController@vocabulario');
+$app->get('/aprendiz/dialogos', 'AprendizController@dialogos');
+$app->get('/aprendiz/ejercicios', 'AprendizController@ejercicios');
+$app->get('/aprendiz/glosario', 'AprendizController@glosario');
+$app->get('/aprendiz/perfil', 'AprendizController@perfil');
 
 // --- Autenticación y Registro ---
 $app->get('/login', 'AuthController@showLogin');
