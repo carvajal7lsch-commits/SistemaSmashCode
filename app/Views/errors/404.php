@@ -180,6 +180,26 @@ if (!function_exists('limpiar')) {
         </a>
       </li>
       <li>
+        <a href="<?= $proyectoPath ?>/instructor/niveles" class="nav-enlace">
+          <i class="fas fa-layer-group nav-icono"></i><span>Niveles</span>
+        </a>
+      </li>
+      <li>
+        <a href="<?= $proyectoPath ?>/instructor/raps" class="nav-enlace">
+          <i class="fas fa-file-lines nav-icono"></i><span>RAPs</span>
+        </a>
+      </li>
+      <li>
+        <a href="<?= $proyectoPath ?>/instructor/vocabulario" class="nav-enlace">
+          <i class="fas fa-spell-check nav-icono"></i><span>Vocabulario</span>
+        </a>
+      </li>
+      <li>
+        <a href="<?= $proyectoPath ?>/instructor/quizzes" class="nav-enlace">
+          <i class="fas fa-question-circle nav-icono"></i><span>Quizzes</span>
+        </a>
+      </li>
+      <li>
         <a href="<?= $proyectoPath ?>/instructor/exportar" class="nav-enlace">
           <i class="fas fa-file-csv nav-icono"></i><span>Exportar CSV</span>
         </a>
