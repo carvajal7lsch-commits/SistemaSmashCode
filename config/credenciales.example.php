@@ -13,8 +13,8 @@ define('DB_CHARSET', 'utf8mb4');
 
 // Configuración de SMTP (Gmail)
 define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_USER', 'santiagolizcanosuarez@gmail.com');
-define('SMTP_PASS', 'ynwtqxsriuonrgal'); // Tu Contraseña de Aplicación de Gmail
+define('SMTP_USER', 'smascode@gmail.com');
+define('SMTP_PASS', ''); // Tu Contraseña de Aplicación de Gmail
 define('SMTP_PORT', 587);
 
 // Configuración de JWT
