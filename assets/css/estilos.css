@@ -243,7 +243,18 @@
   border-color: #CBD5E1 !important;
 }
 
-/* Transición suave al cambiar de tema */
+/* Light mode overrides for learning path */
+[data-theme="light"] .learning-path-view { background: #F0F4F8; }
+[data-theme="light"] .card { background: #FFFFFF !important; border-color: #E2E8F0 !important; }
+[data-theme="light"] .card h3 { color: #1E293B !important; }
+[data-theme="light"] .node-wrapper::before { border-color: #CBD5E1 !important; }
+[data-theme="light"] .node.star-locked { background: #E2E8F0 !important; color: #94A3B8 !important; box-shadow: 0 6px 0 #CBD5E1 !important; }
+[data-theme="light"] .node-wrapper .tooltip { background: #FFFFFF !important; border-color: #E2E8F0 !important; box-shadow: 0 2px 0 #E2E8F0 !important; }
+[data-theme="light"] .module-view { background: #FFFFFF !important; }
+[data-theme="light"] .module-header { border-bottom-color: #E2E8F0 !important; }
+[data-theme="light"] .module-header h1 { color: #1E293B !important; }
+
+
 html {
   transition: background-color 0.3s ease, color 0.3s ease;
 }

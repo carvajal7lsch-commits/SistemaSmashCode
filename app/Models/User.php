@@ -137,5 +137,33 @@ class User extends Model {
         );
         return $stmt->execute([$hashContrasena, $usuarioId]);
     }
+
+    /**
+     * Actualiza el nombre completo del usuario.
+     */
+    public function actualizarNombre(string $id, string $nombre): bool {
+        $pdo  = self::obtenerConexion();
+        $stmt = $pdo->prepare('UPDATE usuarios SET nombre_completo = ? WHERE id = ?');
+        return $stmt->execute([$nombre, $id]);
+    }
+
+    /**
+     * Obtiene solo el hash de la contraseña de un usuario.
+     */
+    public function obtenerHashContrasena(string $id): string {
+        $pdo  = self::obtenerConexion();
+        $stmt = $pdo->prepare('SELECT contrasena FROM usuarios WHERE id = ? LIMIT 1');
+        $stmt->execute([$id]);
+        return (string)($stmt->fetchColumn() ?: '');
+    }
+
+    /**
+     * Actualiza únicamente la contraseña del usuario.
+     */
+    public function actualizarContrasena(string $id, string $hashContrasena): bool {
+        $pdo  = self::obtenerConexion();
+        $stmt = $pdo->prepare('UPDATE usuarios SET contrasena = ?, intentos_fallidos = 0, bloqueado = 0 WHERE id = ?');
+        return $stmt->execute([$hashContrasena, $id]);
+    }
 }
 

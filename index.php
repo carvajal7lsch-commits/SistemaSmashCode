@@ -29,6 +29,7 @@ $app->get('/aprendiz/dialogos', 'AprendizController@dialogos');
 $app->get('/aprendiz/ejercicios', 'AprendizController@ejercicios');
 $app->get('/aprendiz/glosario', 'AprendizController@glosario');
 $app->get('/aprendiz/perfil', 'AprendizController@perfil');
+$app->post('/aprendiz/perfil/actualizar', 'AprendizController@actualizarPerfil');
 
 // --- Autenticación y Registro ---
 $app->get('/login', 'AuthController@showLogin');

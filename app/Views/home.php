@@ -73,7 +73,7 @@
     .node-wrapper::before {
       content: ''; position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%); width: 82px; height: 82px;
-      background: transparent; border: 8px solid #e5e5e5; border-radius: 50%;
+      background: transparent; border: 8px solid var(--gris-claro); border-radius: 50%;
       z-index: 0; pointer-events: none;
     }
     .path-item.current .node-wrapper::before { display: none; }
@@ -100,13 +100,13 @@
       border-radius: 50%; display: flex; align-items: center; justify-content: center;
       font-size: 30px; cursor: pointer; transition: all 0.1s ease;
     }
-    .node.star { background: var(--duo-green); color: white; box-shadow: 0 6px 0 var(--duo-green-dark); }
+    .node.star { background: var(--duo-green); color: #fff; box-shadow: 0 6px 0 var(--duo-green-dark); }
     .node.star:hover { transform: translateY(2px); box-shadow: 0 4px 0 var(--duo-green-dark); }
     .node.star:active { transform: translateY(6px); box-shadow: 0 0 0 var(--duo-green-dark); }
-    .node.star-locked { background: var(--duo-gray); color: var(--duo-gray-dark); box-shadow: 0 6px 0 #bcbcbc; cursor: not-allowed; }
-    .node.completed { background: var(--duo-green); color: white; box-shadow: 0 6px 0 var(--duo-green-dark); }
-    .node.chest-complete { background: #ffd700; color: white; box-shadow: 0 6px 0 #cc9900; }
-    .node.trophy-complete { background: var(--duo-green); color: white; box-shadow: 0 6px 0 var(--duo-green-dark); }
+    .node.star-locked { background: var(--gris-claro); color: var(--gris-medio); box-shadow: 0 6px 0 var(--borde-sutil); cursor: not-allowed; }
+    .node.completed { background: var(--duo-green); color: #fff; box-shadow: 0 6px 0 var(--duo-green-dark); }
+    .node.chest-complete { background: #ffd700; color: #fff; box-shadow: 0 6px 0 #cc9900; }
+    .node.trophy-complete { background: var(--duo-green); color: #fff; box-shadow: 0 6px 0 var(--duo-green-dark); }
 
     .progress-ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
 
@@ -118,23 +118,23 @@
     .stat.gem { color: var(--duo-blue); }
     .stat.heart { color: #ff4b4b; }
 
-    .card { border: 2px solid var(--duo-gray); border-radius: 15px; padding: 15px; margin-bottom: 20px; background: var(--blanco); }
-    .card h3 { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--duo-text); }
+    .card { border: 2px solid var(--gris-claro); border-radius: 15px; padding: 15px; margin-bottom: 20px; background: var(--blanco); }
+    .card h3 { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--gris-texto); }
     .promo-content { display: flex; align-items: center; gap: 15px; }
-    .lock-icon { width: 50px; height: 50px; background: var(--duo-gray); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--duo-gray-dark); font-size: 20px; }
+    .lock-icon { width: 50px; height: 50px; background: var(--gris-claro); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--gris-medio); font-size: 20px; }
 
     .daily-card .card-header { display: flex; justify-content: space-between; align-items: center; }
     .daily-card a { color: var(--duo-blue); text-decoration: none; font-weight: 800; font-size: 12px; }
     .challenge-item { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
     .challenge-item i { color: #ff9600; font-size: 24px; }
-    .mini-progress-bar { width: 200px; height: 12px; background: var(--duo-gray); border-radius: 10px; position: relative; margin-top: 5px; }
-    .mini-progress-fill { height: 100%; background: #ff9600; border-radius: 10px; }
+    .mini-progress-bar { width: 200px; height: 12px; background: var(--gris-claro); border-radius: 10px; position: relative; margin-top: 5px; }
+    .mini-progress-fill { height: 100%; background: var(--naranja); border-radius: 10px; }
     .mini-progress-bar i { position: absolute; right: -10px; top: -5px; font-size: 14px; color: #cd7f32; }
     
     .signup-card { text-align: center; }
     .signup-card button { width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; margin-top: 10px; cursor: pointer; border: none; }
-    .btn-create { background: var(--duo-green); color: white; box-shadow: 0 4px 0 var(--duo-green-dark); }
-    .btn-login { background: var(--duo-blue); color: white; box-shadow: 0 4px 0 var(--duo-blue-dark); }
+    .btn-create { background: var(--verde); color: #fff; box-shadow: 0 4px 0 var(--verde-oscuro); }
+    .btn-login { background: var(--azul); color: #fff; box-shadow: 0 4px 0 var(--azul-oscuro); }
   </style>
 </head>
 <body>
