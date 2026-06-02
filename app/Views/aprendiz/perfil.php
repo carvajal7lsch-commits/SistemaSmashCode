@@ -13,14 +13,14 @@
     :root {
       --duo-green: #58cc02;
       --duo-green-dark: #46a302;
-      --duo-gray: #e5e5e5;
-      --duo-text: #4b4b4b;
+      --duo-gray: var(--gris-claro);
+      --duo-text: var(--gris-texto);
     }
-    .module-view { display: flex; flex-direction: column; padding: 20px 40px; background: #fff; flex: 1; height: 100vh; overflow-y: auto; }
+    .module-view { display: flex; flex-direction: column; padding: 20px 40px; background: var(--fondo); flex: 1; height: 100vh; overflow-y: auto; }
     .module-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--duo-gray); }
     .header-icon { font-size: 40px; color: var(--duo-green); background: rgba(88,204,2,0.1); padding: 15px; border-radius: 15px; }
     .module-header h1 { font-size: 24px; font-weight: 800; margin: 0 0 5px 0; color: var(--duo-text); }
-    .module-header p { margin: 0; color: #777; font-size: 14px; }
+    .module-header p { margin: 0; color: var(--texto-tenue); font-size: 14px; }
   </style>
 </head>
 <body>
@@ -38,7 +38,7 @@
         
         <div style="padding: 20px; border: 2px solid var(--duo-gray); border-radius: 15px;">
             <h2 style="margin-top:0;"><?= limpiar($usuario['nombre_completo']) ?></h2>
-            <p><strong>Email:</strong> <?= limpiar($usuario['email']) ?></p>
+            <p><strong>Email:</strong> <?= limpiar($usuario['correo'] ?? '') ?></p>
             <p><strong>XP Total:</strong> <?= $usuario['xp_puntos'] ?? 0 ?></p>
         </div>
     </div>

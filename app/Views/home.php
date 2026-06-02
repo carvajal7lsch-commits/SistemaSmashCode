@@ -17,9 +17,9 @@
       --duo-green-dark: #46a302;
       --duo-blue: #1cb0f6;
       --duo-blue-dark: #1899d6;
-      --duo-gray: #e5e5e5;
-      --duo-gray-dark: #afafaf;
-      --duo-text: #4b4b4b;
+      --duo-gray: var(--gris-claro);
+      --duo-gray-dark: var(--gris-medio);
+      --duo-text: var(--gris-texto);
     }
 
     /* Main Content Area */
@@ -27,7 +27,7 @@
       display: flex;
       padding: 20px 40px;
       gap: 40px;
-      background: #fff;
+      background: var(--fondo);
       flex: 1;
       height: 100vh;
       overflow-y: auto;
@@ -84,7 +84,7 @@
     }
     .node-wrapper .tooltip {
       position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
-      background: white; border: 2px solid var(--duo-gray); padding: 5px 15px;
+      background: var(--blanco); border: 2px solid var(--duo-gray); padding: 5px 15px;
       border-radius: 12px; font-weight: 800; font-size: 14px; color: var(--duo-green);
       box-shadow: 0 2px 0 var(--duo-gray); animation: bounce 2s infinite ease-in-out;
       white-space: nowrap; z-index: 10;
@@ -92,7 +92,7 @@
     .node-wrapper .tooltip::after {
       content: ''; position: absolute; bottom: -10px; left: 50%;
       transform: translateX(-50%); border-left: 10px solid transparent;
-      border-right: 10px solid transparent; border-top: 10px solid white;
+      border-right: 10px solid transparent; border-top: 10px solid var(--blanco);
     }
 
     .node {
@@ -118,7 +118,7 @@
     .stat.gem { color: var(--duo-blue); }
     .stat.heart { color: #ff4b4b; }
 
-    .card { border: 2px solid var(--duo-gray); border-radius: 15px; padding: 15px; margin-bottom: 20px; background: white; }
+    .card { border: 2px solid var(--duo-gray); border-radius: 15px; padding: 15px; margin-bottom: 20px; background: var(--blanco); }
     .card h3 { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--duo-text); }
     .promo-content { display: flex; align-items: center; gap: 15px; }
     .lock-icon { width: 50px; height: 50px; background: var(--duo-gray); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--duo-gray-dark); font-size: 20px; }
@@ -329,7 +329,7 @@
             <h3>¡Compite en las Ligas!</h3>
             <div class="promo-content">
                 <div class="lock-icon"><i class="fas fa-lock"></i></div>
-                <p style="font-size:14px;color:var(--duo-text-light);">Completa lecciones para empezar a competir</p>
+                <p style="font-size:14px;color:var(--texto-tenue);">Completa lecciones para empezar a competir</p>
             </div>
         </div>
 
@@ -346,7 +346,7 @@
                         <div class="mini-progress-fill" style="width: <?= $autenticado ? min(100,($usuario['xp_puntos']??0)/10*100) : 0 ?>%;"></div>
                         <i class="fas fa-box"></i>
                     </div>
-                    <div style="font-size:11px;color:var(--duo-text-light);margin-top:4px;"><?= $autenticado ? min(10,$usuario['xp_puntos']??0) : 0 ?> / 10</div>
+                    <div style="font-size:11px;color:var(--texto-tenue);margin-top:4px;"><?= $autenticado ? min(10,$usuario['xp_puntos']??0) : 0 ?> / 10</div>
                 </div>
             </div>
         </div>
