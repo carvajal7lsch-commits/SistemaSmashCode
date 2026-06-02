@@ -43,6 +43,18 @@ $app->get('/admin', 'AdminController@index');
 // --- Panel de Instructor ---
 $app->get('/instructor', 'InstructorController@index');
 
+// --- Módulo de Niveles (HU10) — Admin ---
+$app->get('/admin/niveles',              'AdminController@niveles');
+$app->get('/admin/niveles/editar',       'AdminController@editarNivel');
+$app->post('/admin/niveles/actualizar',  'AdminController@actualizarNivel');
+$app->post('/admin/niveles/toggle',      'AdminController@toggleNivel');
+
+// --- Módulo de Niveles (HU10) — Instructor ---
+$app->get('/instructor/niveles',             'InstructorController@niveles');
+$app->get('/instructor/niveles/editar',      'InstructorController@editarNivel');
+$app->post('/instructor/niveles/actualizar', 'InstructorController@actualizarNivel');
+$app->post('/instructor/niveles/toggle',     'InstructorController@toggleNivel');
+
 // --- Gestión de Usuarios (HU04) ---
 $app->get('/admin/usuarios', 'AdminController@usuarios');
 $app->get('/admin/usuarios/crear', 'AdminController@crearUsuario');

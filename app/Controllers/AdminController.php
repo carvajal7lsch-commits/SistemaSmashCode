@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\Admin;
 use App\Models\GestionUsuarios;
+use App\Models\Nivel;
 use App\Models\Programa;
 
 /**
@@ -15,12 +16,14 @@ class AdminController extends Controller {
 
     private Admin $adminModel;
     private GestionUsuarios $usuarioModel;
+    private Nivel $nivelModel;
     private Programa $programaModel;
 
     public function __construct() {
         parent::__construct();
         $this->adminModel   = new Admin();
         $this->usuarioModel = new GestionUsuarios();
+        $this->nivelModel   = new Nivel();
         $this->programaModel = new Programa();
         iniciarSesion();
 
@@ -348,6 +351,88 @@ class AdminController extends Controller {
 
         // Mezclar caracteres aleatoriamente
         return str_shuffle($clave);
+    }
+
+    /* ========================================================
+     * HU10 — Gestión de Niveles (6 niveles fijos MCER)
+     * ======================================================== */
+
+    /**
+     * Lista los 6 niveles con sus estadísticas de RAPs.
+     */
+    public function niveles(): void {
+        $niveles       = $this->nivelModel->obtenerTodos();
+        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $exito  = limpiar($_GET['exito'] ?? '');
+        $error  = limpiar($_GET['error']  ?? '');
+
+        $this->render('admin/niveles', compact('niveles', 'totalUsuarios', 'exito', 'error'));
+    }
+
+    /**
+     * Muestra el formulario de edición de un nivel.
+     */
+    public function editarNivel(): void {
+        $id    = limpiar($_GET['id'] ?? '');
+        $nivel = $this->nivelModel->obtenerPorId($id);
+
+        if (!$nivel) {
+            $this->redirect('admin/niveles?error=' . urlencode('Nivel no encontrado.'));
+        }
+
+        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $this->render('admin/nivel_form', compact('nivel', 'totalUsuarios'));
+    }
+
+    /**
+     * Procesa la actualización de un nivel (nombre, descripción, imagen, umbral, estado).
+     */
+    public function actualizarNivel(): void {
+        if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+            $this->redirect('admin/niveles');
+        }
+
+        $id          = limpiar($_POST['id'] ?? '');
+        $nombre      = limpiar($_POST['nombre'] ?? '');
+        $descripcion = limpiar($_POST['descripcion'] ?? '');
+        $imagenUrl   = limpiar($_POST['imagen_url'] ?? '') ?: null;
+        $umbral      = (float)($_POST['umbral_desbloqueo'] ?? 80);
+        $activo      = isset($_POST['activo']) ? 1 : 0;
+
+        if (empty($id) || empty($nombre)) {
+            $this->redirect('admin/niveles?error=' . urlencode('El nombre del nivel es obligatorio.'));
+            return;
+        }
+
+        $nivel = $this->nivelModel->obtenerPorId($id);
+        if (!$nivel) {
+            $this->redirect('admin/niveles?error=' . urlencode('Nivel no encontrado.'));
+            return;
+        }
+
+        // El nivel 1 (orden=1) siempre tiene umbral 0
+        if ((int)$nivel['orden'] === 1) {
+            $umbral = 0.00;
+        }
+
+        $this->nivelModel->actualizar($id, $nombre, $descripcion, $imagenUrl, $umbral, $activo);
+        $this->redirect('admin/niveles?exito=actualizado');
+    }
+
+    /**
+     * Alterna el estado activo/inactivo de un nivel (toggle rápido).
+     */
+    public function toggleNivel(): void {
+        if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+            $this->redirect('admin/niveles');
+        }
+
+        $id = limpiar($_POST['id'] ?? '');
+        if (!empty($id)) {
+            $this->nivelModel->toggleActivo($id);
+        }
+
+        $this->redirect('admin/niveles?exito=estado');
     }
 
     /* ======================================================== */
