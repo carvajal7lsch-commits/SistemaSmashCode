@@ -12,6 +12,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 // 2. Cargar utilidades procedimentales heredadas (funciones globales y manejo de sesión)
 require_once __DIR__ . '/config/sesion.php';
 require_once __DIR__ . '/includes/funciones.php';
+require_once __DIR__ . '/config/conexion.php';
 
 // 3. Registrar el Autocargador PSR-4 del núcleo MVC
 require_once __DIR__ . '/app/Core/Autoloader.php';
@@ -24,6 +25,10 @@ $app = new \App\Core\App();
 
 // --- Panel Principal (Aprendiz) ---
 $app->get('/', 'HomeController@index');
+$app->get('/aprendiz/rap', 'AprendizController@rap');
+$app->post('/aprendiz/rap/marcar-vocabulario', 'AprendizController@toggleVocabMarcado');
+$app->post('/aprendiz/rap/guardar-progreso', 'AprendizController@guardarProgreso');
+$app->post('/aprendiz/rap/guardar-quiz', 'AprendizController@guardarIntentoQuiz');
 $app->get('/aprendiz/vocabulario', 'AprendizController@vocabulario');
 $app->get('/aprendiz/dialogos', 'AprendizController@dialogos');
 $app->get('/aprendiz/ejercicios', 'AprendizController@ejercicios');

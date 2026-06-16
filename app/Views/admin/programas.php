@@ -69,6 +69,16 @@
         </div>
       <?php endif; ?>
 
+      <!-- Barra de filtros -->
+      <?php if (!empty($programas)): ?>
+      <div class="barra-filtros" style="margin-bottom: 20px;">
+        <div class="contenedor-input-search" style="max-width: 360px; margin: 0;">
+          <i class="fas fa-search icono-search"></i>
+          <input type="text" id="buscar-programa" class="input-busqueda" placeholder="Buscar programa por nombre o descripción...">
+        </div>
+      </div>
+      <?php endif; ?>
+
       <!-- Tabla de programas -->
       <div class="tarjeta" style="padding:0; overflow:hidden;">
         <?php if (empty($programas)): ?>
@@ -80,7 +90,7 @@
             </a>
           </div>
         <?php else: ?>
-          <table class="tabla-datos" style="width:100%;">
+          <table class="tabla-usuarios" style="width:100%;">
             <thead>
               <tr>
                 <th style="width:30%;">Nombre</th>
@@ -107,19 +117,15 @@
                   <?= $p['descripcion'] ? limpiar($p['descripcion']) : '<span style="opacity:.4;">Sin descripción</span>' ?>
                 </td>
                 <td style="text-align:center;">
-                  <span class="nav-badge" style="background:rgba(88,204,2,.12); color:var(--verde-acento); border:1px solid rgba(88,204,2,.25); padding:2px 10px; border-radius:20px; font-size:.72rem; font-weight:700;">
+                  <span style="background:rgba(28, 176, 246, 0.12); color:var(--azul); border:1px solid rgba(28, 176, 246, 0.25); padding:4px 10px; border-radius:20px; font-size:.72rem; font-weight:700;">
                     <?= (int)$p['total_usuarios'] ?>
                   </span>
                 </td>
                 <td style="text-align:center;">
                   <?php if ($p['activo']): ?>
-                    <span style="background:rgba(88,204,2,.12); color:var(--verde-acento); border:1px solid rgba(88,204,2,.25); padding:3px 12px; border-radius:20px; font-size:.72rem; font-weight:700;">
-                      <i class="fas fa-circle" style="font-size:.4rem; vertical-align:middle;"></i> Activo
-                    </span>
+                    <span class="badge-activo">Activo</span>
                   <?php else: ?>
-                    <span style="background:rgba(255,75,75,.1); color:var(--rojo); border:1px solid rgba(255,75,75,.25); padding:3px 12px; border-radius:20px; font-size:.72rem; font-weight:700;">
-                      <i class="fas fa-circle" style="font-size:.4rem; vertical-align:middle;"></i> Inactivo
-                    </span>
+                    <span class="badge-inactivo">Inactivo</span>
                   <?php endif; ?>
                 </td>
                 <td style="text-align:center;">
@@ -130,27 +136,19 @@
                       <i class="fas fa-pen"></i>
                     </a>
                     <!-- Toggle activo/inactivo -->
-                    <form method="POST" action="<?= PROYECTO_PATH ?>/admin/programas/toggle" style="display:inline;" id="form-toggle-<?= substr($p['id'],0,8) ?>">
-                      <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
-                      <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                      <button type="submit" class="btn-accion <?= $p['activo'] ? 'btn-suspender' : 'btn-activar' ?>"
-                              title="<?= $p['activo'] ? 'Desactivar' : 'Activar' ?>"
-                              id="btn-toggle-programa-<?= substr($p['id'],0,8) ?>">
-                        <i class="fas fa-<?= $p['activo'] ? 'ban' : 'check' ?>"></i>
-                      </button>
-                    </form>
+                    <button type="button" class="btn-accion <?= $p['activo'] ? 'btn-suspender' : 'btn-activar' ?>"
+                            title="<?= $p['activo'] ? 'Desactivar' : 'Activar' ?>"
+                            id="btn-toggle-programa-<?= substr($p['id'],0,8) ?>"
+                            onclick="abrirModalToggle('<?= $p['id'] ?>', <?= $p['activo'] ?>, '<?= limpiar(addslashes($p['nombre'])) ?>')">
+                      <i class="fas fa-<?= $p['activo'] ? 'ban' : 'check' ?>"></i>
+                    </button>
                     <!-- Eliminar (solo si no tiene usuarios) -->
                     <?php if ((int)$p['total_usuarios'] === 0): ?>
-                    <form method="POST" action="<?= PROYECTO_PATH ?>/admin/programas/eliminar" style="display:inline;"
-                          id="form-eliminar-<?= substr($p['id'],0,8) ?>"
-                          onsubmit="return confirm('¿Eliminar el programa «<?= limpiar($p['nombre']) ?>»? Esta acción no se puede deshacer.')">
-                      <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
-                      <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                      <button type="submit" class="btn-accion btn-eliminar" title="Eliminar"
-                              id="btn-eliminar-programa-<?= substr($p['id'],0,8) ?>">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                    </form>
+                    <button type="button" class="btn-accion btn-eliminar" title="Eliminar"
+                            id="btn-eliminar-programa-<?= substr($p['id'],0,8) ?>"
+                            onclick="abrirModalEliminar('<?= $p['id'] ?>', '<?= limpiar(addslashes($p['nombre'])) ?>')">
+                      <i class="fas fa-trash"></i>
+                    </button>
                     <?php else: ?>
                     <button class="btn-accion btn-eliminar" disabled title="Tiene usuarios vinculados" style="opacity:.3; cursor:not-allowed;">
                       <i class="fas fa-trash"></i>
@@ -175,8 +173,103 @@
       </div>
 
     </div><!-- /pagina-contenido -->
+
+    <!-- Modal: Activar/Desactivar Programa -->
+    <div class="modal-fondo" id="modal-toggle-estado">
+      <div class="modal-caja">
+        <p class="modal-titulo" id="modal-toggle-titulo" style="font-size:1.3rem; font-weight:800; color:var(--texto-principal); margin-bottom:12px;"></p>
+        <p class="modal-desc" id="modal-toggle-desc" style="font-size:0.875rem; color:var(--texto-secundario); line-height:1.6; margin-bottom:24px;"></p>
+        <form method="POST" action="<?= PROYECTO_PATH ?>/admin/programas/toggle">
+          <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
+          <input type="hidden" name="id" id="toggle-id">
+          <div class="modal-acciones" style="gap:12px;">
+            <button type="button" class="btn btn-gris" onclick="cerrarModal('modal-toggle-estado')">Cancelar</button>
+            <button type="submit" class="btn" id="toggle-btn-confirm">Confirmar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal: Eliminar Programa -->
+    <div class="modal-fondo" id="modal-eliminar">
+      <div class="modal-caja">
+        <p class="modal-titulo" style="font-size:1.3rem; font-weight:800; color:var(--rojo); margin-bottom:12px;">⚠️ Confirmar Eliminación</p>
+        <p class="modal-desc" id="modal-eliminar-desc" style="font-size:0.875rem; color:var(--texto-secundario); line-height:1.6; margin-bottom:24px;"></p>
+        <form method="POST" action="<?= PROYECTO_PATH ?>/admin/programas/eliminar">
+          <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
+          <input type="hidden" name="id" id="eliminar-id">
+          <div class="modal-acciones" style="gap:12px;">
+            <button type="button" class="btn btn-gris" onclick="cerrarModal('modal-eliminar')">Cancelar</button>
+            <button type="submit" class="btn btn-verde" style="background:linear-gradient(135deg, var(--rojo), #DC2626); box-shadow: 0 4px 0 #DC2626;" id="eliminar-btn-confirm">Sí, Eliminar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </main>
 </div>
 <script src="<?= PROYECTO_PATH ?>/assets/js/tema.js"></script>
+<script>
+  function abrirModalToggle(id, activo, nombre) {
+    document.getElementById('toggle-id').value = id;
+    const accion = activo == 1 ? 'Desactivar' : 'Activar';
+    document.getElementById('modal-toggle-titulo').textContent = accion + ' Programa';
+    document.getElementById('modal-toggle-desc').textContent = 
+      '¿Estás seguro de que deseas ' + accion.toLowerCase() + ' el programa «' + nombre + '»? ' +
+      (activo == 1 ? 'Los usuarios vinculados conservarán su asignación, pero no se podrán realizar nuevas asignaciones a este programa.' : 'El programa volverá a estar disponible para nuevas asignaciones.');
+    
+    const btnConfirm = document.getElementById('toggle-btn-confirm');
+    if (activo == 1) {
+      btnConfirm.className = "btn btn-gris";
+      btnConfirm.style.background = "linear-gradient(135deg, var(--naranja), #E08400)";
+      btnConfirm.style.color = "#fff";
+      btnConfirm.style.boxShadow = "0 4px 0 #E08400";
+      btnConfirm.textContent = 'Desactivar';
+    } else {
+      btnConfirm.className = "btn btn-verde";
+      btnConfirm.style.background = "";
+      btnConfirm.style.color = "";
+      btnConfirm.style.boxShadow = "";
+      btnConfirm.textContent = 'Activar';
+    }
+    document.getElementById('modal-toggle-estado').classList.add('visible');
+  }
+
+  function abrirModalEliminar(id, nombre) {
+    document.getElementById('eliminar-id').value = id;
+    document.getElementById('modal-eliminar-desc').textContent = 
+      '¿Estás seguro de que deseas eliminar permanentemente el programa «' + nombre + '»? Esta acción no se puede deshacer.';
+    document.getElementById('modal-eliminar').classList.add('visible');
+  }
+
+  function cerrarModal(id) {
+    document.getElementById(id).classList.remove('visible');
+  }
+
+  // Cerrar modal al hacer clic fuera de la caja
+  document.querySelectorAll('.modal-fondo').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('visible'); });
+  });
+
+  // Búsqueda en tiempo real (lado del cliente)
+  document.getElementById('buscar-programa')?.addEventListener('input', function(e) {
+    const query = e.target.value.toLowerCase().trim();
+    const rows = document.querySelectorAll('.tabla-usuarios tbody tr');
+    
+    rows.forEach(row => {
+      // Ignorar fila vacía si existe
+      if (row.querySelector('td[colspan]')) return;
+      
+      const nombre = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+      const descripcion = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+      
+      if (nombre.includes(query) || descripcion.includes(query)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+</script>
 </body>
 </html>

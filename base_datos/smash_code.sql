@@ -372,5 +372,7 @@ INSERT INTO insignia (id, nombre, descripcion, criterio) VALUES
 -- Administrador (Santiago Lizcano) y Instructor (Sebastian Carvajal)
 -- Hash bcrypt generado con cost 12 para la contraseña: admin2026
 INSERT INTO usuarios (id, nombre_completo, correo, contrasena, rol, activo, correo_verificado) VALUES
-(UUID(), 'Santiago Lizcano', 'santiagolizcanosuarez@gmail.com', '$2y$12$KkQ1pBOn.P9iVvV5b61uWeq8jA.R3lV7J5A.vG201.O.jQ9eC6bM2', 'admin', 1, 1),
-(UUID(), 'Sebastian Carvajal', 'carvajal7lsch@gmail.com', '$2y$12$KkQ1pBOn.P9iVvV5b61uWeq8jA.R3lV7J5A.vG201.O.jQ9eC6bM2', 'instructor', 1, 1);
+(UUID(), 'Santiago Lizcano', 'santiagolizcanosuarez@gmail.com', '$2y$12$1ezL2IyUXxL5r7JU/4qZluuF8/xMPrdiikwXpgdb7yzo9vfkaiZaS', 'admin', 1, 1),
+(UUID(), 'Sebastian Carvajal', 'carvajal7lsch@gmail.com', '$2y$12$1ezL2IyUXxL5r7JU/4qZluuF8/xMPrdiikwXpgdb7yzo9vfkaiZaS', 'instructor', 1, 1),
+(UUID(), 'Manuel Cardenas', 'manuelcardenassuarez2005@gmail.com', '$2y$12$1ezL2IyUXxL5r7JU/4qZluuF8/xMPrdiikwXpgdb7yzo9vfkaiZaS', 'admin', 1, 1),
+(UUID(), 'Manuel Aprendiz', 'manuel_aprendiz@gmail.com', '$2y$12$1ezL2IyUXxL5r7JU/4qZluuF8/xMPrdiikwXpgdb7yzo9vfkaiZaS', 'aprendiz', 1, 1);

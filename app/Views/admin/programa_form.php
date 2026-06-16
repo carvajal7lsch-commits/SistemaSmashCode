@@ -53,10 +53,24 @@
           </div>
         <?php endif; ?>
 
-        <div class="tarjeta" style="margin-top:20px;">
+        <div class="tarjeta glass-panel" style="margin-top:20px; padding:0; overflow:hidden; border-radius: var(--radio);">
+          <!-- Cabecera de la tarjeta con gradiente -->
+          <div class="cabecera-tarjeta-premium cabecera-tarjeta-verde">
+            <div class="cabecera-icono-wrap">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div>
+              <h2 style="font-size: 1.25rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.05em; color: #fff;">
+                <?= $modoEditar ? 'Editar Programa' : 'Nuevo Programa' ?>
+              </h2>
+              <p style="font-size: 0.78rem; opacity: 0.85; margin: 4px 0 0 0; font-weight: 600;">
+                <?= $modoEditar ? 'Modifica los campos del programa de formación.' : 'Completa los campos para crear un nuevo programa.' ?>
+              </p>
+            </div>
+          </div>
           <form method="POST"
                 action="<?= PROYECTO_PATH ?>/admin/programas/<?= $modoEditar ? 'actualizar' : 'guardar' ?>"
-                novalidate id="form-programa">
+                novalidate id="form-programa" style="padding: 32px;">
             <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
             <?php if ($modoEditar): ?>
               <input type="hidden" name="id" value="<?= $programa['id'] ?>">
@@ -80,10 +94,13 @@
               <label class="etiqueta-campo" for="descripcion">
                 Descripción <span style="color:var(--texto-tenue); font-weight:400;">(Opcional)</span>
               </label>
-              <textarea id="descripcion" name="descripcion" class="campo-input"
-                        placeholder="Descripción breve del programa y su contexto..."
-                        rows="4" maxlength="500"
-                        style="resize:vertical; padding-top:12px;"><?= limpiar($programa['descripcion'] ?? '') ?></textarea>
+              <div class="contenedor-input">
+                <i class="fas fa-align-left icono-input" style="top: 18px; transform: none; color: var(--texto-tenue);"></i>
+                <textarea id="descripcion" name="descripcion" class="campo-input"
+                          placeholder="Descripción breve del programa y su contexto..."
+                          rows="4" maxlength="500"
+                          style="resize:vertical; padding: 12px 14px 12px 38px; min-height: 120px;"><?= limpiar($programa['descripcion'] ?? '') ?></textarea>
+              </div>
               <div style="display:flex; justify-content:space-between; margin-top:4px;">
                 <span class="ayuda-campo">Máximo 500 caracteres.</span>
                 <span id="contador-desc" style="font-size:.72rem; color:var(--texto-tenue);">

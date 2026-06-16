@@ -10,15 +10,6 @@
   (function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();
   </script>
   <style>
-    .pagina-cambio-clave {
-      min-height: 100vh; display: flex; align-items: center;
-      justify-content: center; background: var(--fondo); padding: 24px;
-    }
-    .caja-cambio {
-      background: var(--blanco); border-radius: var(--radio);
-      padding: 40px 36px; max-width: 460px; width: 100%;
-      border: 2px solid var(--borde); box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    }
     .icono-clave {
       width: 72px; height: 72px; border-radius: 50%;
       background: linear-gradient(135deg, var(--azul), #0A91D1);
@@ -39,20 +30,21 @@
   <i class="fas fa-sun tema-icono"></i>
   <span class="tema-label">Claro</span>
 </button>
-<div class="pagina-cambio-clave">
-  <div class="caja-cambio">
+<main class="pagina-auth">
+  <div class="contenedor-auth animar-entrada" style="max-width: 500px;">
+    <div class="panel-auth-der" style="border-radius: var(--radio); padding: 40px 36px;">
 
-    <div class="icono-clave"><i class="fas fa-key"></i></div>
+      <div class="icono-clave"><i class="fas fa-key"></i></div>
 
-    <h1 style="font-size: 1.4rem; font-weight: 900; text-align:center; margin-bottom: 6px;">Cambiar Contraseña</h1>
-    <p style="font-size: 0.85rem; color: var(--gris-medio); text-align:center; margin-bottom: 24px; line-height:1.6;">
-      Por seguridad, debes establecer una <strong>nueva contraseña personal</strong> antes de continuar.
-      Esta contraseña temporal no podrás volver a usarla.
-    </p>
+      <h1 style="font-size: 1.4rem; font-weight: 900; text-align:center; margin-bottom: 6px; color: var(--texto-principal);">Cambiar Contraseña</h1>
+      <p style="font-size: 0.85rem; color: var(--gris-medio); text-align:center; margin-bottom: 24px; line-height:1.6;">
+        Por seguridad, debes establecer una <strong>nueva contraseña personal</strong> antes de continuar.
+        Esta contraseña temporal no podrás volver a usarla.
+      </p>
 
-    <?php if ($error): ?>
-      <div class="alerta alerta-error"><i class="fas fa-triangle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+      <?php if ($error): ?>
+        <div class="alerta alerta-error"><i class="fas fa-triangle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
+      <?php endif; ?>
 
     <form method="POST" action="<?= PROYECTO_PATH ?>/cambiar-clave/guardar" novalidate id="form-clave">
       <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
@@ -85,13 +77,14 @@
         <li>Las contraseñas deben coincidir</li>
       </ul>
 
-      <button type="submit" class="btn btn-verde">
+      <button type="submit" class="btn btn-verde btn-block">
         <i class="fas fa-floppy-disk"></i> Guardar y Continuar
       </button>
     </form>
 
+    </div>
   </div>
-</div>
+</main>
 
 <script>
 function evaluarFuerza(clave) {

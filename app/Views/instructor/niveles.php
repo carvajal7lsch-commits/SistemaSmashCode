@@ -167,13 +167,22 @@
               </span>
             </div>
             <div class="card-nivel-acciones">
-              <a href="<?= PROYECTO_PATH ?>/instructor/niveles/editar?id=<?= urlencode($n['id']) ?>" class="btn-editar-nivel">
+              <a href="<?= PROYECTO_PATH ?>/instructor/niveles/editar?id=<?= urlencode($n['id']) ?>" class="btn-editar-nivel" style="font-size:0.7rem; padding:9px 6px;">
                 <i class="fas fa-pen-to-square"></i> Editar
               </a>
-              <form method="POST" action="<?= PROYECTO_PATH ?>/instructor/niveles/toggle" style="margin:0;">
+              <?php if ($n['rap_id']): ?>
+                <a href="<?= PROYECTO_PATH ?>/aprendiz/rap?id=<?= urlencode($n['rap_id']) ?>" 
+                   class="btn-editar-nivel" 
+                   style="background: var(--azul); font-size:0.7rem; padding:9px 6px; text-decoration: none;"
+                   title="Previsualizar el RAP como aprendiz">
+                  <i class="fas fa-eye-low-vision"></i> Prever
+                </a>
+              <?php endif; ?>
+              <form method="POST" action="<?= PROYECTO_PATH ?>/instructor/niveles/toggle" style="margin:0; display:flex;">
                 <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                 <input type="hidden" name="id"         value="<?= limpiar($n['id']) ?>">
                 <button type="submit" class="btn-toggle-nivel <?= $n['activo'] ? 'desactivar' : 'activar' ?>"
+                        style="font-size:0.7rem; padding:9px 6px;"
                         onclick="return confirm('<?= $n['activo'] ? '¿Desactivar este nivel?' : '¿Activar este nivel?' ?>')">
                   <i class="fas fa-<?= $n['activo'] ? 'eye-slash' : 'eye' ?>"></i>
                   <?= $n['activo'] ? 'Desactivar' : 'Activar' ?>

@@ -36,6 +36,7 @@ class Nivel extends Model {
         $stmt = $pdo->query(
             'SELECT n.id, n.nombre, n.descripcion, n.imagen_url, n.orden,
                     n.activo, n.umbral_desbloqueo,
+                    MAX(r.id) AS rap_id,
                     COUNT(r.id) AS total_raps,
                     SUM(CASE WHEN r.activo = 1 THEN 1 ELSE 0 END) AS raps_activos
              FROM nivel n

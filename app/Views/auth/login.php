@@ -120,7 +120,7 @@
           <a href="<?= PROYECTO_PATH ?>/recuperar" style="font-size:0.8rem; color:var(--azul); font-weight:700;">¿Olvidaste tu contraseña?</a>
         </div>
 
-        <button type="submit" class="btn btn-verde">
+        <button type="submit" class="btn btn-verde btn-block">
           <i class="fas fa-right-to-bracket"></i> Ingresar
         </button>
         <div class="separador-o">o ingresa con</div>
@@ -179,7 +179,7 @@
           <span class="ayuda-campo">Incluye al menos 1 mayúscula y 1 número</span>
         </div>
 
-        <button type="submit" class="btn btn-verde">
+        <button type="submit" class="btn btn-verde btn-block">
           <i class="fas fa-user-plus"></i> Crear cuenta
         </button>
         <div class="separador-o">o regístrate con</div>

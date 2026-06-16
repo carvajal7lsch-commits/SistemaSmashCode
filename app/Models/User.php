@@ -165,5 +165,126 @@ class User extends Model {
         $stmt = $pdo->prepare('UPDATE usuarios SET contrasena = ?, intentos_fallidos = 0, bloqueado = 0 WHERE id = ?');
         return $stmt->execute([$hashContrasena, $id]);
     }
+
+    /**
+     * Incrementa los puntos XP de un usuario y recalcula su nivel de perfil.
+     */
+    public function actualizarXP(string $id, int $puntos): bool {
+        $pdo = self::obtenerConexion();
+        $pdo->beginTransaction();
+        try {
+            // Obtener XP actuales
+            $stmt = $pdo->prepare('SELECT xp_puntos, nivel_perfil FROM usuarios WHERE id = ? FOR UPDATE');
+            $stmt->execute([$id]);
+            $user = $stmt->fetch();
+            if (!$user) {
+                $pdo->rollBack();
+                return false;
+            }
+
+            $nuevoXp = (int)$user['xp_puntos'] + $puntos;
+            // Nivel = floor(XP / 500) + 1
+            $nuevoNivel = (int)floor($nuevoXp / 500) + 1;
+
+            $stmtUpdate = $pdo->prepare('UPDATE usuarios SET xp_puntos = ?, nivel_perfil = ? WHERE id = ?');
+            $stmtUpdate->execute([$nuevoXp, $nuevoNivel, $id]);
+
+            $pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            error_log('[User Model] Error en actualizarXP: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Obtiene el historial de intentos de quizzes de un usuario.
+     */
+    public function obtenerHistorialQuizzes(string $usuarioId): array {
+        $pdo = self::obtenerConexion();
+        $stmt = $pdo->prepare(
+            'SELECT i.id, i.puntaje, i.aprobado, i.numero_intento, i.duracion_seg, i.creado_en, r.titulo AS rap_titulo
+             FROM intento_quiz i
+             JOIN quiz q ON q.id = i.quiz_id
+             JOIN rap r ON r.id = q.rap_id
+             WHERE i.usuario_id = ?
+             ORDER BY i.creado_en DESC'
+        );
+        $stmt->execute([$usuarioId]);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Obtiene las insignias ganadas por el usuario.
+     */
+    public function obtenerInsigniasGanadas(string $usuarioId): array {
+        $pdo = self::obtenerConexion();
+        $stmt = $pdo->prepare(
+            'SELECT i.id, i.nombre, i.descripcion, i.icono_url, iu.ganada_en
+             FROM insignia_usuario iu
+             JOIN insignia i ON i.id = iu.insignia_id
+             WHERE iu.usuario_id = ?
+             ORDER BY iu.ganada_en DESC'
+        );
+        $stmt->execute([$usuarioId]);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Obtiene todas las insignias registradas en el sistema.
+     */
+    public function obtenerTodasInsignias(): array {
+        $pdo = self::obtenerConexion();
+        $stmt = $pdo->query('SELECT id, nombre, descripcion, icono_url FROM insignia');
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Otorga una insignia a un usuario (si no la tiene ya).
+     */
+    public function otorgarInsignia(string $usuarioId, string $insigniaId): bool {
+        $pdo = self::obtenerConexion();
+        // Verificar si ya la tiene
+        $stmtCheck = $pdo->prepare('SELECT 1 FROM insignia_usuario WHERE usuario_id = ? AND insignia_id = ? LIMIT 1');
+        $stmtCheck->execute([$usuarioId, $insigniaId]);
+        if ($stmtCheck->fetchColumn()) {
+            return true;
+        }
+        $stmtInsert = $pdo->prepare('INSERT INTO insignia_usuario (usuario_id, insignia_id) VALUES (?, ?)');
+        return $stmtInsert->execute([$usuarioId, $insigniaId]);
+    }
+
+    /**
+     * Obtiene el ranking de usuarios del mismo programa para el leaderboard.
+     */
+    public function obtenerLeaderboardSemanal(?string $programaId): array {
+        if (!$programaId) return [];
+        $pdo = self::obtenerConexion();
+        $stmt = $pdo->prepare(
+            'SELECT id, nombre_completo, xp_puntos, nivel_perfil
+             FROM usuarios
+             WHERE programa_id = ? AND rol = "aprendiz" AND eliminado = 0 AND activo = 1
+             ORDER BY xp_puntos DESC
+             LIMIT 15'
+        );
+        $stmt->execute([$programaId]);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Obtiene las fechas únicas en las que el usuario ha realizado actividades (quizzes o ejercicios).
+     */
+    public function obtenerHeatmapActividad(string $usuarioId): array {
+        $pdo = self::obtenerConexion();
+        $stmt = $pdo->prepare(
+            'SELECT DISTINCT DATE(creado_en) AS fecha FROM intento_quiz WHERE usuario_id = ?
+             UNION
+             SELECT DISTINCT DATE(creado_en) AS fecha FROM intento_ejercicio WHERE usuario_id = ?
+             ORDER BY fecha ASC'
+        );
+        $stmt->execute([$usuarioId, $usuarioId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 }
 

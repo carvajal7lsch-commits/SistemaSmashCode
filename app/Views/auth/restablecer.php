@@ -28,7 +28,7 @@
       <?php if ($exito): ?>
         <div class="alerta alerta-exito"><i class="fas fa-circle-check"></i><?= $exito ?></div>
         <div style="text-align:center; margin-top: 20px;">
-          <a href="<?= PROYECTO_PATH ?>/login" class="btn btn-verde"><i class="fas fa-right-to-bracket"></i> Ir a Iniciar Sesión</a>
+          <a href="<?= PROYECTO_PATH ?>/login" class="btn btn-verde btn-block"><i class="fas fa-right-to-bracket"></i> Ir a Iniciar Sesión</a>
         </div>
       <?php endif; ?>
 
@@ -47,7 +47,7 @@
           <span class="ayuda-campo">Incluye al menos 1 mayúscula y 1 número</span>
         </div>
 
-        <button type="submit" class="btn btn-verde" style="margin-top: 10px;">
+        <button type="submit" class="btn btn-verde btn-block" style="margin-top: 10px;">
           <i class="fas fa-save"></i> Guardar Contraseña
         </button>
       </form>

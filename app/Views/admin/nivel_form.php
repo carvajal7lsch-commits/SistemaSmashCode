@@ -9,60 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script>(function(){var t=localStorage.getItem('smashcode_tema');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
   <style>
-    .form-nivel-card {
-      background: var(--blanco);
-      border: 1px solid var(--borde-sutil);
-      border-radius: 20px;
-      padding: 32px 36px;
-      max-width: 680px;
-    }
-    .form-grupo { margin-bottom: 22px; }
-    .form-label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--texto-secundario);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .form-label span { color: #EF4444; margin-left: 2px; }
-    .form-input, .form-textarea {
-      width: 100%;
-      padding: 11px 14px;
-      background: var(--fondo-input);
-      border: 1px solid var(--borde-sutil);
-      border-radius: 10px;
-      color: var(--texto-principal);
-      font-size: 0.9rem;
-      font-family: inherit;
-      transition: border-color 0.2s;
-      box-sizing: border-box;
-    }
-    .form-input:focus, .form-textarea:focus {
-      outline: none;
-      border-color: var(--azul);
-    }
-    .form-textarea { resize: vertical; min-height: 90px; }
-    .form-input:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-    .form-hint {
-      font-size: 0.72rem;
-      color: var(--texto-tenue);
-      margin-top: 5px;
-    }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .toggle-activo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      background: var(--fondo-input);
-      border: 1px solid var(--borde-sutil);
-      border-radius: 10px;
-    }
     .toggle-switch {
       position: relative;
       width: 46px;
@@ -91,17 +37,14 @@
     input:checked + .slider:before { transform: translateX(20px); }
     .preview-imagen {
       width: 100%;
-      height: 140px;
+      height: 150px;
       border-radius: 12px;
       object-fit: cover;
-      border: 1px solid var(--borde-sutil);
-      margin-top: 10px;
       display: none;
-      background: var(--fondo-input);
     }
     .preview-placeholder {
       width: 100%;
-      height: 140px;
+      height: 150px;
       border-radius: 12px;
       border: 2px dashed var(--borde-sutil);
       display: flex;
@@ -110,19 +53,11 @@
       color: var(--texto-tenue);
       font-size: 0.8rem;
       gap: 8px;
-      margin-top: 10px;
     }
-    .badge-nivel-orden {
-      display: inline-flex;
+    .toggle-activo {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      background: rgba(28,176,246,0.12);
-      color: var(--azul);
-      border-radius: 99px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      margin-bottom: 18px;
+      gap: 12px;
     }
   </style>
 </head>
@@ -168,93 +103,115 @@
         </a>
       </div>
 
-      <div class="form-nivel-card">
-        <div class="badge-nivel-orden">
-          <i class="fas fa-layer-group"></i>
-          Nivel <?= (int)$nivel['orden'] ?> — MCER
+      <div class="tarjeta glass-panel" style="padding:0; overflow:hidden; border-radius: var(--radio); max-width: 680px; margin: 0;">
+        <!-- Cabecera de la tarjeta con gradiente -->
+        <div class="cabecera-tarjeta-premium cabecera-tarjeta-morada">
+          <div class="cabecera-icono-wrap">
+            <i class="fas fa-layer-group"></i>
+          </div>
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.05em; color: #fff;">
+              Editar Nivel <?= (int)$nivel['orden'] ?>
+            </h2>
+            <p style="font-size: 0.78rem; opacity: 0.85; margin: 4px 0 0 0; font-weight: 600;">
+              Modifica los atributos, umbrales y la portada del nivel MCER.
+            </p>
+          </div>
         </div>
-
-        <form id="form-editar-nivel" method="POST" action="<?= PROYECTO_PATH ?>/admin/niveles/actualizar" novalidate>
+        <form id="form-editar-nivel" method="POST" action="<?= PROYECTO_PATH ?>/admin/niveles/actualizar" novalidate style="padding: 32px;">
           <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
           <input type="hidden" name="id"         value="<?= limpiar($nivel['id']) ?>">
 
           <!-- Nombre -->
-          <div class="form-grupo">
-            <label for="nombre-nivel" class="form-label">Nombre del Nivel <span>*</span></label>
-            <input type="text" id="nombre-nivel" name="nombre"
-                   class="form-input"
-                   value="<?= limpiar($nivel['nombre']) ?>"
-                   maxlength="255" required
-                   placeholder="Ej: Nivel 1 - A1 Básico">
-            <p class="form-hint">Identificador visible para aprendices e instructores.</p>
+          <div class="grupo-campo">
+            <label for="nombre-nivel" class="etiqueta-campo">Nombre del Nivel *</label>
+            <div class="contenedor-input">
+              <i class="fas fa-layer-group icono-input"></i>
+              <input type="text" id="nombre-nivel" name="nombre"
+                     class="campo-input"
+                     value="<?= limpiar($nivel['nombre']) ?>"
+                     maxlength="255" required
+                     placeholder="Ej: Nivel 1 - A1 Básico">
+            </div>
+            <p class="form-hint ayuda-campo" style="margin-top: 6px;">Identificador visible para aprendices e instructores.</p>
           </div>
 
           <!-- Descripción -->
-          <div class="form-grupo">
-            <label for="descripcion-nivel" class="form-label">Descripción</label>
-            <textarea id="descripcion-nivel" name="descripcion"
-                      class="form-textarea"
-                      maxlength="500"
-                      placeholder="Describe el contenido y objetivos de este nivel..."><?= limpiar($nivel['descripcion'] ?? '') ?></textarea>
-            <p class="form-hint">Máximo 500 caracteres. Visible en el mapa de niveles del aprendiz.</p>
+          <div class="grupo-campo">
+            <label for="descripcion-nivel" class="etiqueta-campo">Descripción</label>
+            <div class="contenedor-input">
+              <i class="fas fa-align-left icono-input" style="top: 18px; transform: none; color: var(--texto-tenue);"></i>
+              <textarea id="descripcion-nivel" name="descripcion"
+                        class="campo-input"
+                        maxlength="500"
+                        placeholder="Describe el contenido y objetivos de este nivel..."
+                        style="resize:vertical; min-height:100px; padding-top: 12px;"><?= limpiar($nivel['descripcion'] ?? '') ?></textarea>
+            </div>
+            <p class="form-hint ayuda-campo" style="margin-top: 6px;">Máximo 500 caracteres. Visible en el mapa de niveles del aprendiz.</p>
           </div>
 
           <!-- URL de imagen -->
-          <div class="form-grupo">
-            <label for="imagen-url-nivel" class="form-label">URL de imagen de portada</label>
-            <input type="url" id="imagen-url-nivel" name="imagen_url"
-                   class="form-input"
-                   value="<?= limpiar($nivel['imagen_url'] ?? '') ?>"
-                   placeholder="https://ejemplo.com/imagen.jpg">
-            <p class="form-hint">Imagen de portada del nivel (PNG, JPG o WebP recomendado, mín. 600×300 px).</p>
+          <div class="grupo-campo">
+            <label for="imagen-url-nivel" class="etiqueta-campo">URL de imagen de portada</label>
+            <div class="contenedor-input">
+              <i class="fas fa-image icono-input"></i>
+              <input type="url" id="imagen-url-nivel" name="imagen_url"
+                     class="campo-input"
+                     value="<?= limpiar($nivel['imagen_url'] ?? '') ?>"
+                     placeholder="https://ejemplo.com/imagen.jpg">
+            </div>
+            <p class="form-hint ayuda-campo" style="margin-top: 6px;">Imagen de portada del nivel (PNG, JPG o WebP recomendado, mín. 600×300 px).</p>
             <!-- Preview -->
-            <div class="preview-placeholder" id="preview-placeholder-<?= (int)$nivel['orden'] ?>">
+            <div class="preview-placeholder" id="preview-placeholder-<?= (int)$nivel['orden'] ?>" style="border-radius: 12px; margin-top: 12px;">
               <i class="fas fa-image"></i> Vista previa de imagen
             </div>
             <img id="preview-img-nivel" class="preview-imagen"
                  src="<?= limpiar($nivel['imagen_url'] ?? '') ?>"
-                 alt="Preview portada nivel">
+                 alt="Preview portada nivel" style="border-radius: 12px; margin-top: 12px; border: 2px solid var(--borde-sutil);">
           </div>
 
           <!-- Umbral + RAPs -->
-          <div class="form-row">
-            <div class="form-grupo" style="margin-bottom:0;">
-              <label for="umbral-nivel" class="form-label">Umbral de desbloqueo (%)</label>
-              <input type="number" id="umbral-nivel" name="umbral_desbloqueo"
-                     class="form-input"
-                     value="<?= number_format((float)$nivel['umbral_desbloqueo'], 2) ?>"
-                     min="0" max="100" step="0.01"
-                     <?= (int)$nivel['orden'] === 1 ? 'disabled title="El Nivel 1 siempre está disponible (0%)"' : '' ?>>
-              <p class="form-hint">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 22px;">
+            <div class="grupo-campo" style="margin-bottom:0;">
+              <label for="umbral-nivel" class="etiqueta-campo">Umbral de desbloqueo (%)</label>
+              <div class="contenedor-input">
+                <i class="fas fa-percentage icono-input"></i>
+                <input type="number" id="umbral-nivel" name="umbral_desbloqueo"
+                       class="campo-input"
+                       value="<?= number_format((float)$nivel['umbral_desbloqueo'], 2) ?>"
+                       min="0" max="100" step="0.01"
+                       <?= (int)$nivel['orden'] === 1 ? 'disabled title="El Nivel 1 siempre está disponible (0%)"' : '' ?>>
+              </div>
+              <p class="form-hint ayuda-campo" style="margin-top: 6px;">
                 <?= (int)$nivel['orden'] === 1 ? '⚡ El Nivel 1 siempre es accesible sin requisito previo.' : '% mínimo del nivel anterior para desbloquear este.' ?>
               </p>
             </div>
 
-            <div class="form-grupo" style="margin-bottom:0;">
-              <label class="form-label">RAPs configurados</label>
-              <div style="padding:11px 14px;background:var(--fondo-input);border:1px solid var(--borde-sutil);border-radius:10px;font-size:0.9rem;color:var(--texto-secundario);">
-                <i class="fas fa-file-lines" style="color:#8B5CF6;margin-right:6px;"></i>
-                <?= (int)$nivel['total_raps'] ?> RAP<?= (int)$nivel['total_raps'] !== 1 ? 's' : '' ?> asignado<?= (int)$nivel['total_raps'] !== 1 ? 's' : '' ?>
+            <div class="grupo-campo" style="margin-bottom:0;">
+              <label class="etiqueta-campo">RAPs configurados</label>
+              <div style="padding:12px 14px; background:rgba(31,47,54,0.4); border:2px solid var(--borde-sutil); border-radius:12px; font-size:0.9rem; color:var(--texto-secundario); display: flex; align-items: center; min-height: 48px; box-sizing: border-box;">
+                <i class="fas fa-file-lines" style="color:#8B5CF6; margin-right:8px;"></i>
+                <span><?= (int)$nivel['total_raps'] ?> RAP<?= (int)$nivel['total_raps'] !== 1 ? 's' : '' ?> asignado<?= (int)$nivel['total_raps'] !== 1 ? 's' : '' ?></span>
               </div>
-              <p class="form-hint">Gestiona los RAPs desde el módulo de RAPs.</p>
+              <p class="form-hint ayuda-campo" style="margin-top: 6px;">Gestiona los RAPs desde el módulo de RAPs.</p>
             </div>
           </div>
 
           <!-- Toggle activo -->
-          <div class="form-grupo" style="margin-top:22px;">
-            <label class="form-label">Estado del nivel</label>
-            <div class="toggle-activo">
+          <div class="grupo-campo" style="margin-top:22px;">
+            <label class="etiqueta-campo">Estado del nivel</label>
+            <div class="toggle-activo" style="border: 2px solid var(--borde-sutil); border-radius: 12px; padding: 14px 16px; background: rgba(31,47,54,0.2);">
               <label class="toggle-switch" for="activo-nivel">
                 <input type="checkbox" id="activo-nivel" name="activo" value="1"
                        <?= $nivel['activo'] ? 'checked' : '' ?>
                        <?= (int)$nivel['orden'] === 1 ? 'disabled title="El Nivel 1 no puede desactivarse."' : '' ?>>
-                <span class="slider"></span>
+                <span class="slider" style="box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);"></span>
               </label>
               <div>
-                <span style="font-size:0.88rem;font-weight:700;color:var(--texto-principal);" id="estado-label-nivel">
+                <span style="font-size:0.88rem; font-weight:800; color:var(--texto-principal);" id="estado-label-nivel">
                   <?= $nivel['activo'] ? 'Activo' : 'Inactivo' ?>
                 </span>
-                <p style="font-size:0.72rem;color:var(--texto-tenue);margin:2px 0 0 0;">
+                <p style="font-size:0.72rem; color:var(--texto-tenue); margin:2px 0 0 0; font-weight: 600;">
                   <?= (int)$nivel['orden'] === 1 ? 'El Nivel 1 siempre debe estar activo.' : 'Un nivel inactivo no es visible para los aprendices.' ?>
                 </p>
               </div>
@@ -262,11 +219,11 @@
           </div>
 
           <!-- Botones -->
-          <div style="display:flex;gap:12px;margin-top:28px;padding-top:20px;border-top:1px solid var(--borde-sutil);">
-            <button type="submit" id="btn-guardar-nivel" class="btn btn-primario" style="width:auto;padding:11px 28px;font-size:0.9rem;">
+          <div style="display:flex; gap:12px; margin-top:28px; padding-top:20px; border-top:1px solid var(--borde-sutil);">
+            <button type="submit" id="btn-guardar-nivel" class="btn btn-verde">
               <i class="fas fa-floppy-disk"></i> Guardar cambios
             </button>
-            <a href="<?= PROYECTO_PATH ?>/admin/niveles" class="btn" style="width:auto;padding:11px 20px;font-size:0.9rem;background:var(--fondo-input);border:1px solid var(--borde-sutil);color:var(--texto-secundario);text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+            <a href="<?= PROYECTO_PATH ?>/admin/niveles" class="btn btn-gris">
               <i class="fas fa-xmark"></i> Cancelar
             </a>
           </div>

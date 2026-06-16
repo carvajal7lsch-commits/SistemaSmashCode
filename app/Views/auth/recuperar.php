@@ -28,7 +28,7 @@
       <?php if ($exito): ?>
         <div class="alerta alerta-exito"><i class="fas fa-circle-check"></i><?= $exito ?></div>
         <div style="text-align:center; margin-top: 20px;">
-          <a href="<?= PROYECTO_PATH ?>/login" class="btn btn-verde"><i class="fas fa-arrow-left"></i> Volver a Iniciar Sesión</a>
+          <a href="<?= PROYECTO_PATH ?>/login" class="btn btn-verde btn-block"><i class="fas fa-arrow-left"></i> Volver a Iniciar Sesión</a>
         </div>
       <?php else: ?>
         <p class="subtitulo-formulario" style="text-align:center;">Ingresa tu correo institucional y te enviaremos un enlace seguro para restablecer tu contraseña.</p>
@@ -43,7 +43,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-verde" style="margin-top: 10px;">
+          <button type="submit" class="btn btn-verde btn-block" style="margin-top: 10px;">
             <i class="fas fa-paper-plane"></i> Enviar Enlace de Recuperación
           </button>
           

@@ -16,26 +16,44 @@
       gap: 22px;
     }
     .card-nivel {
-      background: var(--blanco);
-      border: 1px solid var(--borde-sutil);
-      border-radius: 18px;
+      background: rgba(31, 47, 54, 0.65) !important;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 2px solid rgba(255, 255, 255, 0.06) !important;
+      border-radius: 20px;
       overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 24px var(--glow-color) !important;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s;
       position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    [data-theme="light"] .card-nivel {
+      background: rgba(255, 255, 255, 0.75) !important;
+      border: 2px solid rgba(0, 0, 0, 0.08) !important;
+      box-shadow: 0 8px 24px var(--glow-color) !important;
     }
     .card-nivel:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 36px var(--glow-color) !important;
+      border-color: var(--theme-color) !important;
+    }
+    .card-nivel.inactivo {
+      opacity: 0.65;
+      filter: grayscale(0.35);
+      border-top-color: var(--gris-medio) !important;
+      --theme-color: var(--gris-medio) !important;
+      --glow-color: rgba(132, 146, 156, 0.08) !important;
     }
     .card-nivel-imagen {
       width: 100%;
       height: 140px;
-      object-fit: cover;
-      background: linear-gradient(135deg, #1a2d35 0%, #0e3a4a 100%);
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 3rem;
+      position: relative;
     }
     .card-nivel-imagen img {
       width: 100%;
@@ -119,48 +137,10 @@
     }
     .card-nivel-acciones {
       display: flex;
-      gap: 8px;
-    }
-    .btn-editar-nivel {
-      flex: 1;
-      display: inline-flex;
+      gap: 10px;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 9px 14px;
-      background: var(--verde-acento);
-      color: #fff;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-decoration: none;
-      transition: opacity 0.15s;
+      margin-top: auto;
     }
-    .btn-editar-nivel:hover { opacity: 0.85; }
-    .btn-toggle-nivel {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 9px 14px;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      border: none;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-    .btn-toggle-nivel.desactivar {
-      background: rgba(239,68,68,0.12);
-      color: #EF4444;
-      border: 1px solid rgba(239,68,68,0.3);
-    }
-    .btn-toggle-nivel.activar {
-      background: rgba(16,185,129,0.12);
-      color: #10B981;
-      border: 1px solid rgba(16,185,129,0.3);
-    }
-    .btn-toggle-nivel:hover { opacity: 0.75; }
     /* Overlay inactivo */
     .card-nivel.inactivo .card-nivel-imagen::after {
       content: '';
@@ -236,23 +216,45 @@
       <?php endif; ?>
 
       <!-- Resumen rápido -->
-      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px;">
+      <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:28px;">
         <?php
           $totalActivos   = count(array_filter($niveles, fn($n) => $n['activo'] == 1));
           $totalInactivos = count($niveles) - $totalActivos;
         ?>
-        <div style="background:var(--blanco);border:1px solid var(--borde-sutil);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:12px;">
-          <div style="width:38px;height:38px;background:rgba(28,176,246,0.12);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--azul);"><i class="fas fa-layer-group"></i></div>
-          <div><div style="font-size:1.5rem;font-weight:800;line-height:1;"><?= count($niveles) ?></div><div style="font-size:0.72rem;color:var(--texto-tenue);font-weight:600;">Total Niveles</div></div>
+        <div class="tarjeta glass-panel" style="flex: 1; min-width: 180px; padding:16px 20px; display:flex; align-items:center; gap:14px; border-radius: 16px; border: 1px solid var(--borde-sutil);">
+          <div style="width:44px; height:44px; background:rgba(28,176,246,0.15); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--azul); font-size: 1.2rem; box-shadow: 0 0 12px rgba(28,176,246,0.1);"><i class="fas fa-layer-group"></i></div>
+          <div>
+            <div style="font-size:1.6rem; font-weight:900; line-height:1.1; color: var(--texto-principal);"><?= count($niveles) ?></div>
+            <div style="font-size:0.75rem; color:var(--texto-secundario); font-weight:700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px;">Total Niveles</div>
+          </div>
         </div>
-        <div style="background:var(--blanco);border:1px solid var(--borde-sutil);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:12px;">
-          <div style="width:38px;height:38px;background:rgba(16,185,129,0.12);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#10B981;"><i class="fas fa-circle-check"></i></div>
-          <div><div style="font-size:1.5rem;font-weight:800;line-height:1;"><?= $totalActivos ?></div><div style="font-size:0.72rem;color:var(--texto-tenue);font-weight:600;">Activos</div></div>
+        <div class="tarjeta glass-panel" style="flex: 1; min-width: 180px; padding:16px 20px; display:flex; align-items:center; gap:14px; border-radius: 16px; border: 1px solid var(--borde-sutil);">
+          <div style="width:44px; height:44px; background:rgba(88,204,2,0.15); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--verde); font-size: 1.2rem; box-shadow: 0 0 12px rgba(88,204,2,0.1);"><i class="fas fa-circle-check"></i></div>
+          <div>
+            <div style="font-size:1.6rem; font-weight:900; line-height:1.1; color: var(--texto-principal);"><?= $totalActivos ?></div>
+            <div style="font-size:0.75rem; color:var(--texto-secundario); font-weight:700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px;">Activos</div>
+          </div>
         </div>
-        <div style="background:var(--blanco);border:1px solid var(--borde-sutil);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:12px;">
-          <div style="width:38px;height:38px;background:rgba(239,68,68,0.12);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#EF4444;"><i class="fas fa-ban"></i></div>
-          <div><div style="font-size:1.5rem;font-weight:800;line-height:1;"><?= $totalInactivos ?></div><div style="font-size:0.72rem;color:var(--texto-tenue);font-weight:600;">Inactivos</div></div>
+        <div class="tarjeta glass-panel" style="flex: 1; min-width: 180px; padding:16px 20px; display:flex; align-items:center; gap:14px; border-radius: 16px; border: 1px solid var(--borde-sutil);">
+          <div style="width:44px; height:44px; background:rgba(255,75,75,0.15); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--rojo); font-size: 1.2rem; box-shadow: 0 0 12px rgba(255,75,75,0.1);"><i class="fas fa-ban"></i></div>
+          <div>
+            <div style="font-size:1.6rem; font-weight:900; line-height:1.1; color: var(--texto-principal);"><?= $totalInactivos ?></div>
+            <div style="font-size:0.75rem; color:var(--texto-secundario); font-weight:700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px;">Inactivos</div>
+          </div>
         </div>
+      </div>
+
+      <!-- Barra de filtros -->
+      <div class="barra-filtros" style="margin-bottom: 28px;">
+        <div class="contenedor-input-search" style="max-width: 450px; flex: 1;">
+          <i class="fas fa-search icono-search"></i>
+          <input type="text" id="buscar-nivel" class="input-busqueda" placeholder="Buscar nivel por nombre o descripción...">
+        </div>
+        <select id="filtrar-estado" class="select-filtro" style="min-width: 180px;">
+          <option value="todos">Todos los estados</option>
+          <option value="activos">Activos</option>
+          <option value="inactivos">Inactivos</option>
+        </select>
       </div>
 
       <!-- Grid de niveles -->
@@ -260,14 +262,30 @@
         <?php
         $mcer = ['A1', 'A2', 'B1', 'B1+', 'B2-', 'B2'];
         $iconosNivel = ['🩺','💊','🏥','📋','🚑','🩻'];
+        
+        $coloresNivel = [
+          1 => ['color' => '#58CC02', 'shadow' => 'rgba(88,204,2,0.25)', 'bg' => 'rgba(88,204,2,0.1)'],
+          2 => ['color' => '#1CB0F6', 'shadow' => 'rgba(28,176,246,0.25)', 'bg' => 'rgba(28,176,246,0.1)'],
+          3 => ['color' => '#FF9600', 'shadow' => 'rgba(255,150,0,0.25)', 'bg' => 'rgba(255,150,0,0.1)'],
+          4 => ['color' => '#CE82FF', 'shadow' => 'rgba(206,130,255,0.25)', 'bg' => 'rgba(206,130,255,0.1)'],
+          5 => ['color' => '#FF4B4B', 'shadow' => 'rgba(255,75,75,0.25)', 'bg' => 'rgba(255,75,75,0.1)'],
+          6 => ['color' => '#FFD900', 'shadow' => 'rgba(255,217,0,0.25)', 'bg' => 'rgba(255,217,0,0.1)']
+        ];
+
         foreach ($niveles as $n):
           $orden = (int)$n['orden'];
           $mcerLabel = $mcer[$orden - 1] ?? 'N/A';
           $icono     = $iconosNivel[$orden - 1] ?? '📚';
+          $cfg       = $coloresNivel[$orden] ?? ['color' => '#84929C', 'shadow' => 'rgba(0,0,0,0.1)', 'bg' => 'rgba(0,0,0,0.05)'];
         ?>
-        <div class="card-nivel <?= $n['activo'] ? '' : 'inactivo' ?>" id="nivel-<?= limpiar($n['id']) ?>">
+        <div class="card-nivel <?= $n['activo'] ? '' : 'inactivo' ?>" 
+             id="nivel-<?= limpiar($n['id']) ?>" 
+             data-nombre="<?= limpiar(mb_strtolower($n['nombre'])) ?>"
+             data-desc="<?= limpiar(mb_strtolower($n['descripcion'] ?? '')) ?>"
+             data-activo="<?= $n['activo'] ? '1' : '0' ?>"
+             style="border-top: 4px solid <?= $cfg['color'] ?>; --theme-color: <?= $cfg['color'] ?>; --glow-color: <?= $cfg['shadow'] ?>;">
           <!-- Imagen / portada -->
-          <div class="card-nivel-imagen">
+          <div class="card-nivel-imagen" style="background: linear-gradient(135deg, #1A2D35 0%, <?= $cfg['color'] ?> 100%);">
             <?php if (!empty($n['imagen_url'])): ?>
               <img src="<?= limpiar($n['imagen_url']) ?>" alt="Portada Nivel <?= $orden ?>">
             <?php else: ?>
@@ -276,12 +294,12 @@
           </div>
 
           <div class="card-nivel-body">
-            <div class="card-nivel-orden">Nivel <?= $orden ?> · MCER <?= $mcerLabel ?></div>
+            <div class="card-nivel-orden" style="color: <?= $cfg['color'] ?>;">Nivel <?= $orden ?> · MCER <?= $mcerLabel ?></div>
             <h2 class="card-nivel-nombre"><?= limpiar($n['nombre']) ?></h2>
             <p class="card-nivel-desc"><?= limpiar($n['descripcion'] ?? 'Sin descripción configurada.') ?></p>
 
             <div class="card-nivel-meta">
-              <span class="badge-mcer"><i class="fas fa-graduation-cap"></i> <?= $mcerLabel ?></span>
+              <span class="badge-mcer" style="background: <?= $cfg['bg'] ?>; color: <?= $cfg['color'] ?>; border: 1px solid <?= $cfg['shadow'] ?>;"><i class="fas fa-graduation-cap"></i> <?= $mcerLabel ?></span>
               <span class="badge-raps"><i class="fas fa-file-lines"></i> <?= (int)$n['total_raps'] ?> RAP<?= (int)$n['total_raps'] !== 1 ? 's' : '' ?></span>
               <?php if ($orden > 1): ?>
                 <span class="badge-umbral"><i class="fas fa-lock"></i> ≥<?= number_format((float)$n['umbral_desbloqueo'], 0) ?>%</span>
@@ -296,19 +314,40 @@
             </div>
 
             <div class="card-nivel-acciones">
-              <a href="<?= PROYECTO_PATH ?>/admin/niveles/editar?id=<?= urlencode($n['id']) ?>" class="btn-editar-nivel" id="btn-editar-nivel-<?= $orden ?>">
-                <i class="fas fa-pen-to-square"></i> Editar
+              <a href="<?= PROYECTO_PATH ?>/admin/niveles/editar?id=<?= urlencode($n['id']) ?>" 
+                 class="btn" 
+                 style="padding: 10px 12px; font-size: 0.78rem; background: <?= $cfg['color'] ?>; color: #fff; box-shadow: 0 4px 0 <?= $cfg['shadow'] ?>; border: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; text-decoration:none;"
+                 onmouseover="this.style.filter='brightness(1.08)'"
+                 onmouseout="this.style.filter='none'"
+                 onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='none'"
+                 onmouseup="this.style.transform='none'; this.style.boxShadow='0 4px 0 <?= $cfg['shadow'] ?>'"
+                 id="btn-editar-nivel-<?= $orden ?>">
+                <i class="fas fa-edit"></i> Editar
               </a>
-              <form method="POST" action="<?= PROYECTO_PATH ?>/admin/niveles/toggle" style="margin:0;">
-                <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
-                <input type="hidden" name="id"         value="<?= limpiar($n['id']) ?>">
-                <button type="submit" class="btn-toggle-nivel <?= $n['activo'] ? 'desactivar' : 'activar' ?>"
+              <?php if ($n['rap_id']): ?>
+                <a href="<?= PROYECTO_PATH ?>/aprendiz/rap?id=<?= urlencode($n['rap_id']) ?>" 
+                   class="btn-azul" 
+                   style="padding: 10px 12px; font-size: 0.78rem; border: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;"
+                   id="btn-preview-nivel-<?= $orden ?>"
+                   title="Previsualizar el RAP como aprendiz">
+                  <i class="fas fa-eye-low-vision"></i> Prever
+                </a>
+              <?php endif; ?>
+              <?php if ($orden > 1): ?>
+                <button type="button" class="btn-accion <?= $n['activo'] ? 'btn-suspender' : 'btn-activar' ?>"
+                        style="width: 42px; height: 42px; flex-shrink: 0;"
+                        title="<?= $n['activo'] ? 'Desactivar' : 'Activar' ?>"
                         id="btn-toggle-nivel-<?= $orden ?>"
-                        onclick="return confirm('<?= $n['activo'] ? '¿Desactivar este nivel? Los aprendices no podrán verlo.' : '¿Activar este nivel?' ?>')">
+                        onclick="abrirModalToggleNivel('<?= $n['id'] ?>', <?= $n['activo'] ?>, '<?= $orden ?>', '<?= limpiar(addslashes($n['nombre'])) ?>')">
                   <i class="fas fa-<?= $n['activo'] ? 'eye-slash' : 'eye' ?>"></i>
-                  <?= $n['activo'] ? 'Desactivar' : 'Activar' ?>
                 </button>
-              </form>
+              <?php else: ?>
+                <button type="button" class="btn-accion" disabled 
+                        style="width: 42px; height: 42px; flex-shrink: 0; opacity: 0.35; cursor: not-allowed;" 
+                        title="El Nivel 1 siempre debe estar activo">
+                  <i class="fas fa-eye"></i>
+                </button>
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -327,9 +366,98 @@
       </div>
 
     </div><!-- /pagina-contenido -->
+
+    <!-- Modal: Activar/Desactivar Nivel -->
+    <div class="modal-fondo" id="modal-toggle-nivel">
+      <div class="modal-caja">
+        <p class="modal-titulo" id="modal-level-title" style="font-size:1.3rem; font-weight:800; color:var(--texto-principal); margin-bottom:12px;"></p>
+        <p class="modal-desc" id="modal-level-desc" style="font-size:0.875rem; color:var(--texto-secundario); line-height:1.6; margin-bottom:24px;"></p>
+        <form method="POST" action="<?= PROYECTO_PATH ?>/admin/niveles/toggle">
+          <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
+          <input type="hidden" name="id" id="toggle-nivel-id">
+          <div class="modal-acciones" style="gap:12px;">
+            <button type="button" class="btn btn-gris" onclick="cerrarModal('modal-toggle-nivel')">Cancelar</button>
+            <button type="submit" class="btn" id="toggle-level-btn-confirm">Confirmar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </main>
 </div>
 
 <script src="<?= PROYECTO_PATH ?>/assets/js/tema.js"></script>
+<script>
+  function abrirModalToggleNivel(id, activo, orden, nombre) {
+    document.getElementById('toggle-nivel-id').value = id;
+    const accion = activo == 1 ? 'Desactivar' : 'Activar';
+    document.getElementById('modal-level-title').textContent = accion + ' Nivel ' + orden;
+    document.getElementById('modal-level-desc').textContent = 
+      '¿Estás seguro de que deseas ' + accion.toLowerCase() + ' el nivel «' + nombre + '»? ' +
+      (activo == 1 ? 'Los aprendices no podrán visualizar este nivel ni realizar los ejercicios correspondientes.' : 'El nivel volverá a estar visible para todos los aprendices y habilitado para el aprendizaje.');
+    
+    const btnConfirm = document.getElementById('toggle-level-btn-confirm');
+    if (activo == 1) {
+      btnConfirm.className = "btn btn-gris";
+      btnConfirm.style.background = "linear-gradient(135deg, var(--rojo), #DC2626)";
+      btnConfirm.style.color = "#fff";
+      btnConfirm.style.boxShadow = "0 4px 0 #DC2626";
+      btnConfirm.textContent = 'Desactivar';
+    } else {
+      btnConfirm.className = "btn btn-verde";
+      btnConfirm.style.background = "";
+      btnConfirm.style.color = "";
+      btnConfirm.style.boxShadow = "";
+      btnConfirm.textContent = 'Activar';
+    }
+    document.getElementById('modal-toggle-nivel').classList.add('visible');
+  }
+
+  function cerrarModal(id) {
+    document.getElementById(id).classList.remove('visible');
+  }
+
+  // Cerrar modal al hacer clic fuera de la caja
+  document.querySelectorAll('.modal-fondo').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('visible'); });
+  });
+
+  // Client-side search and status filter for Levels
+  document.addEventListener('DOMContentLoaded', () => {
+    const buscarInput = document.getElementById('buscar-nivel');
+    const filtrarSelect = document.getElementById('filtrar-estado');
+    const cards = document.querySelectorAll('.card-nivel');
+
+    function filtrarNiveles() {
+      const query = buscarInput.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const estado = filtrarSelect.value;
+
+      cards.forEach(card => {
+        const nombre = card.getAttribute('data-nombre').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const desc = card.getAttribute('data-desc').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const activo = card.getAttribute('data-activo');
+
+        const coincideBusqueda = nombre.includes(query) || desc.includes(query);
+        let coincideEstado = true;
+        if (estado === 'activos') coincideEstado = (activo === '1');
+        else if (estado === 'inactivos') coincideEstado = (activo === '0');
+
+        if (coincideBusqueda && coincideEstado) {
+          card.style.display = '';
+          // Re-trigger CSS animation
+          card.style.animation = 'entrar 0.3s cubic-bezier(0.4, 0, 0.2, 1) both';
+        } else {
+          card.style.display = 'none';
+          card.style.animation = 'none';
+        }
+      });
+    }
+
+    if (buscarInput && filtrarSelect) {
+      buscarInput.addEventListener('input', filtrarNiveles);
+      filtrarSelect.addEventListener('change', filtrarNiveles);
+    }
+  });
+</script>
 </body>
 </html>

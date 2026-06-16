@@ -43,21 +43,12 @@
           <span>Nuevo Instructor</span>
         </nav>
 
-        <h1 class="pagina-titulo">
-          <i class="fas fa-chalkboard-teacher" style="color:var(--azul);"></i>
-          Crear Cuenta de Instructor
-        </h1>
-        <p class="pagina-subtitulo" style="margin-bottom:24px;">
-          El sistema generará automáticamente una contraseña temporal y la enviará al correo del instructor.
-          Deberá cambiarla en su primer inicio de sesión.
-        </p>
-
         <?php if ($error): ?>
-          <div class="alerta alerta-error"><i class="fas fa-triangle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
+          <div class="alerta alerta-error" style="margin-top: 12px;"><i class="fas fa-triangle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <!-- Aviso del flujo -->
-        <div class="alerta alerta-info" style="margin-bottom: 24px;">
+        <div class="alerta alerta-info" style="margin-bottom: 24px; margin-top: 12px;">
           <i class="fas fa-circle-info" style="font-size:1.1rem;"></i>
           <div>
             <strong>¿Cómo funciona?</strong><br>
@@ -66,8 +57,22 @@
           </div>
         </div>
 
-        <div class="tarjeta" style="margin-top: 0;">
-          <form method="POST" action="<?= PROYECTO_PATH ?>/admin/usuarios/instructor/guardar" novalidate>
+        <div class="tarjeta glass-panel" style="margin-top: 0; padding: 0; overflow: hidden; border-radius: var(--radio);">
+          <!-- Cabecera de la tarjeta con gradiente -->
+          <div class="cabecera-tarjeta-premium cabecera-tarjeta-azul">
+            <div class="cabecera-icono-wrap">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <div>
+              <h2 style="font-size: 1.25rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.05em; color: #fff;">
+                Crear Instructor
+              </h2>
+              <p style="font-size: 0.78rem; opacity: 0.85; margin: 4px 0 0 0; font-weight: 600;">
+                Se generará y enviará una contraseña temporal por correo electrónico.
+              </p>
+            </div>
+          </div>
+          <form method="POST" action="<?= PROYECTO_PATH ?>/admin/usuarios/instructor/guardar" novalidate style="padding: 32px;">
             <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
 
             <!-- Nombre -->

@@ -231,7 +231,7 @@
               if ($estado !== 'completado') $todosCompletados = false;
 
               $urlRap = $autenticado && $estado !== 'bloqueado'
-                  ? PROYECTO_PATH . '/modulos/aprendiz/rap.php?id=' . urlencode($nivel['rap_id'])
+                  ? PROYECTO_PATH . '/aprendiz/rap?id=' . urlencode($nivel['rap_id'])
                   : '#';
 
               // Clases e íconos exactos de la referencia
