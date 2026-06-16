@@ -110,6 +110,26 @@
               </div>
             </div>
 
+            <!-- Programa de Formación -->
+            <div class="grupo-campo">
+              <label class="etiqueta-campo" for="programa_id">
+                Programa de Formación <span style="color:var(--texto-tenue); font-weight:400;">(Opcional)</span>
+              </label>
+              <div class="contenedor-input">
+                <i class="fas fa-graduation-cap icono-input"></i>
+                <select id="programa_id" name="programa_id" class="campo-input" style="padding-left:38px; cursor:pointer;">
+                  <option value="">— Sin programa asignado —</option>
+                  <?php foreach ($programas as $p): ?>
+                    <option value="<?= $p['id'] ?>"
+                      <?= ($usuario['programa_id'] ?? '') === $p['id'] ? 'selected' : '' ?>>
+                      <?= limpiar($p['nombre']) ?>
+                    </option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <span class="ayuda-campo">Programa de formación SENA al que pertenece este usuario.</span>
+            </div>
+
             <?php if (!$modoEditar): ?>
             <!-- Contraseña (solo al crear) -->
             <div class="grupo-campo">

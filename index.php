@@ -79,6 +79,15 @@ $app->post('/admin/usuarios/instructor/guardar', 'AdminController@guardarInstruc
 $app->get('/cambiar-clave', 'AuthController@showCambiarClave');
 $app->post('/cambiar-clave/guardar', 'AuthController@guardarCambiarClave');
 
+// --- Programas de Formación (HU17) ---
+$app->get('/admin/programas',                'AdminController@programas');
+$app->get('/admin/programas/crear',          'AdminController@crearPrograma');
+$app->post('/admin/programas/guardar',       'AdminController@guardarPrograma');
+$app->get('/admin/programas/editar',         'AdminController@editarPrograma');
+$app->post('/admin/programas/actualizar',    'AdminController@actualizarPrograma');
+$app->post('/admin/programas/toggle',        'AdminController@togglePrograma');
+$app->post('/admin/programas/eliminar',      'AdminController@eliminarPrograma');
+
 // ==============================================================
 
 // 5. Ejecutar la aplicación

@@ -60,8 +60,13 @@
       </a>
     </li>
     <li>
-      <a href="<?= PROYECTO_PATH ?>/admin/niveles" class="nav-enlace">
+      <a href="<?= PROYECTO_PATH ?>/admin/niveles" class="nav-enlace <?= strpos($_SERVER['REQUEST_URI'] ?? '', '/admin/niveles') !== false ? 'activo' : '' ?>">
         <i class="fas fa-layer-group nav-icono"></i><span>Niveles</span>
+      </a>
+    </li>
+    <li>
+      <a href="<?= PROYECTO_PATH ?>/admin/programas" class="nav-enlace <?= strpos($_SERVER['REQUEST_URI'] ?? '', '/admin/programas') !== false ? 'activo' : '' ?>">
+        <i class="fas fa-graduation-cap nav-icono"></i><span>Programas</span>
       </a>
     </li>
     <li>

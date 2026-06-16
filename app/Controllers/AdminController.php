@@ -81,12 +81,14 @@ class AdminController extends Controller {
      */
     public function crearUsuario(): void {
         $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $programas     = $this->programaModel->obtenerTodos();
         $this->render('admin/usuario_form', [
-            'usuario'      => null,
+            'usuario'       => null,
             'totalUsuarios' => $totalUsuarios,
-            'modoEditar'   => false,
-            'error'        => '',
-            'exito'        => ''
+            'programas'     => $programas,
+            'modoEditar'    => false,
+            'error'         => '',
+            'exito'         => ''
         ]);
     }
 
@@ -135,12 +137,14 @@ class AdminController extends Controller {
         }
 
         $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $programas     = $this->programaModel->obtenerTodos();
         $this->render('admin/usuario_form', [
-            'usuario'      => $usuario,
+            'usuario'       => $usuario,
             'totalUsuarios' => $totalUsuarios,
-            'modoEditar'   => true,
-            'error'        => '',
-            'exito'        => ''
+            'programas'     => $programas,
+            'modoEditar'    => true,
+            'error'         => '',
+            'exito'         => ''
         ]);
     }
 
@@ -152,18 +156,19 @@ class AdminController extends Controller {
             $this->redirect('admin/usuarios');
         }
 
-        $id     = limpiar($_POST['id'] ?? '');
-        $nombre = limpiar($_POST['nombre_completo'] ?? '');
-        $correo = limpiar($_POST['correo'] ?? '');
-        $rol    = limpiar($_POST['rol'] ?? 'aprendiz');
-        $ficha  = limpiar($_POST['ficha_sena'] ?? '');
+        $id         = limpiar($_POST['id'] ?? '');
+        $nombre     = limpiar($_POST['nombre_completo'] ?? '');
+        $correo     = limpiar($_POST['correo'] ?? '');
+        $rol        = limpiar($_POST['rol'] ?? 'aprendiz');
+        $ficha      = limpiar($_POST['ficha_sena'] ?? '');
+        $programaId = limpiar($_POST['programa_id'] ?? '');
 
         if (empty($id) || empty($nombre) || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
             $this->redirect('admin/usuarios?error=' . urlencode('El nombre es obligatorio y el correo electrónico debe tener un formato válido.'));
             return;
         }
 
-        $this->usuarioModel->actualizar($id, $nombre, $correo, $rol, $ficha ?: null);
+        $this->usuarioModel->actualizar($id, $nombre, $correo, $rol, $ficha ?: null, $programaId ?: null);
         $this->redirect('admin/usuarios?exito=actualizado');
     }
 
@@ -296,6 +301,7 @@ class AdminController extends Controller {
         // Resolver nombre del programa para el correo
         $nombrePrograma = '';
         if ($programaId) {
+            $programas = $this->programaModel->obtenerTodos();
             foreach ($programas as $p) {
                 if ($p['id'] === $programaId) {
                     $nombrePrograma = $p['nombre'];
@@ -448,5 +454,146 @@ class AdminController extends Controller {
         if (!preg_match('/[A-Z]/', $contrasena))          $errores[] = 'Incluye al menos 1 mayúscula.';
         if (!preg_match('/[0-9]/', $contrasena))          $errores[] = 'Incluye al menos 1 número.';
         return $errores;
+    }
+
+    /* ========================================================
+     * HU17 — Gestión de Programas de Formación
+     * ======================================================== */
+
+    /**
+     * Lista todos los programas de formación para el panel admin.
+     */
+    public function programas(): void {
+        $programas     = $this->programaModel->listarAdmin();
+        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $exito = limpiar($_GET['exito'] ?? '');
+        $error = limpiar($_GET['error']  ?? '');
+
+        $this->render('admin/programas', compact('programas', 'totalUsuarios', 'exito', 'error'));
+    }
+
+    /**
+     * Muestra el formulario de creación de un programa.
+     */
+    public function crearPrograma(): void {
+        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $this->render('admin/programa_form', [
+            'programa'      => null,
+            'totalUsuarios' => $totalUsuarios,
+            'modoEditar'    => false,
+            'error'         => '',
+        ]);
+    }
+
+    /**
+     * Procesa la creación de un nuevo programa de formación.
+     */
+    public function guardarPrograma(): void {
+        if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+            $this->redirect('admin/programas');
+        }
+
+        $nombre      = limpiar($_POST['nombre'] ?? '');
+        $descripcion = limpiar($_POST['descripcion'] ?? '');
+
+        if (empty($nombre)) {
+            $this->redirect('admin/programas?error=' . urlencode('El nombre del programa es obligatorio.'));
+            return;
+        }
+
+        if ($this->programaModel->existeNombre($nombre)) {
+            $this->redirect('admin/programas?error=' . urlencode('Ya existe un programa con ese nombre.'));
+            return;
+        }
+
+        $this->programaModel->crear(generarUUID(), $nombre, $descripcion ?: null);
+        $this->redirect('admin/programas?exito=creado');
+    }
+
+    /**
+     * Muestra el formulario de edición de un programa existente.
+     */
+    public function editarPrograma(): void {
+        $id      = limpiar($_GET['id'] ?? '');
+        $programa = $this->programaModel->obtenerPorId($id);
+
+        if (!$programa) {
+            $this->redirect('admin/programas?error=' . urlencode('Programa no encontrado.'));
+        }
+
+        $totalUsuarios = $this->adminModel->obtenerTotalUsuarios();
+        $this->render('admin/programa_form', [
+            'programa'      => $programa,
+            'totalUsuarios' => $totalUsuarios,
+            'modoEditar'    => true,
+            'error'         => '',
+        ]);
+    }
+
+    /**
+     * Procesa la actualización de nombre y descripción de un programa.
+     */
+    public function actualizarPrograma(): void {
+        if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+            $this->redirect('admin/programas');
+        }
+
+        $id          = limpiar($_POST['id'] ?? '');
+        $nombre      = limpiar($_POST['nombre'] ?? '');
+        $descripcion = limpiar($_POST['descripcion'] ?? '');
+
+        if (empty($id) || empty($nombre)) {
+            $this->redirect('admin/programas?error=' . urlencode('El nombre del programa es obligatorio.'));
+            return;
+        }
+
+        if ($this->programaModel->existeNombre($nombre, $id)) {
+            $this->redirect('admin/programas?error=' . urlencode('Ya existe otro programa con ese nombre.'));
+            return;
+        }
+
+        $this->programaModel->actualizar($id, $nombre, $descripcion ?: null);
+        $this->redirect('admin/programas?exito=actualizado');
+    }
+
+    /**
+     * Alterna el estado activo/inactivo de un programa (toggle).
+     * Un programa inactivo no aparece en selectores de nuevas asignaciones.
+     */
+    public function togglePrograma(): void {
+        if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+            $this->redirect('admin/programas');
+        }
+
+        $id = limpiar($_POST['id'] ?? '');
+        if (!empty($id)) {
+            $this->programaModel->desactivar($id);
+        }
+
+        $this->redirect('admin/programas?exito=estado');
+    }
+
+    /**
+     * Soft-delete de un programa. Bloqueado si tiene usuarios activos vinculados.
+     */
+    public function eliminarPrograma(): void {
+        if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+            $this->redirect('admin/programas');
+        }
+
+        $id = limpiar($_POST['id'] ?? '');
+
+        if (empty($id)) {
+            $this->redirect('admin/programas');
+            return;
+        }
+
+        if ($this->programaModel->tieneUsuarios($id)) {
+            $this->redirect('admin/programas?error=' . urlencode('No se puede eliminar: el programa tiene usuarios activos vinculados.'));
+            return;
+        }
+
+        $this->programaModel->softDelete($id);
+        $this->redirect('admin/programas?exito=eliminado');
     }
 }

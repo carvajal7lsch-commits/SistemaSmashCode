@@ -119,12 +119,12 @@ class GestionUsuarios extends Model {
     /**
      * Actualiza los datos de un usuario (sin tocar la contraseña).
      */
-    public function actualizar(string $id, string $nombre, string $correo, string $rol, ?string $ficha): bool {
+    public function actualizar(string $id, string $nombre, string $correo, string $rol, ?string $ficha, ?string $programaId): bool {
         $pdo  = self::obtenerConexion();
         $stmt = $pdo->prepare(
-            "UPDATE usuarios SET nombre_completo = ?, correo = ?, rol = ?, ficha_sena = ? WHERE id = ?"
+            "UPDATE usuarios SET nombre_completo = ?, correo = ?, rol = ?, ficha_sena = ?, programa_id = ? WHERE id = ?"
         );
-        return $stmt->execute([$nombre, $correo, $rol, $ficha, $id]);
+        return $stmt->execute([$nombre, $correo, $rol, $ficha, $programaId, $id]);
     }
 
     /**
