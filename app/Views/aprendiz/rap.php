@@ -516,6 +516,12 @@
 </head>
 <body>
 
+<?php if (isset($esPreview) && $esPreview): ?>
+  <div style="background: linear-gradient(90deg, #1cb0f6, #1899d6); color: white; text-align: center; padding: 12px; font-weight: 800; font-size: 0.88rem; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(28, 176, 246, 0.25); z-index: 1000; position: relative;">
+    <i class="fas fa-eye"></i> Modo Vista Previa: Tareas y Progreso no se guardarán en la base de datos.
+  </div>
+<?php endif; ?>
+
 <div class="learning-view">
   <!-- HEADER CON PROGRESO -->
   <header class="learning-header">
@@ -538,13 +544,13 @@
     <div class="moment-tab active" id="tab-moment-1" onclick="switchTab(1)">
       <i class="fas fa-gamepad"></i> Moment 1: Warm-Up
     </div>
-    <div class="moment-tab <?= $progreso['porcentaje'] >= 25 || $progreso['completado'] ? '' : 'locked' ?>" id="tab-moment-2" onclick="switchTab(2)">
+    <div class="moment-tab <?= (isset($esPreview) && $esPreview) || $progreso['porcentaje'] >= 25 || $progreso['completado'] ? '' : 'locked' ?>" id="tab-moment-2" onclick="switchTab(2)">
       <i class="fas fa-book-reader"></i> Moment 2: Absorption
     </div>
-    <div class="moment-tab <?= $progreso['porcentaje'] >= 50 || $progreso['completado'] ? '' : 'locked' ?>" id="tab-moment-3" onclick="switchTab(3)">
+    <div class="moment-tab <?= (isset($esPreview) && $esPreview) || $progreso['porcentaje'] >= 50 || $progreso['completado'] ? '' : 'locked' ?>" id="tab-moment-3" onclick="switchTab(3)">
       <i class="fas fa-dumbbell"></i> Moment 3: Practice
     </div>
-    <div class="moment-tab <?= $progreso['porcentaje'] >= 75 || $progreso['completado'] ? '' : 'locked' ?>" id="tab-moment-4" onclick="switchTab(4)">
+    <div class="moment-tab <?= (isset($esPreview) && $esPreview) || $progreso['porcentaje'] >= 75 || $progreso['completado'] ? '' : 'locked' ?>" id="tab-moment-4" onclick="switchTab(4)">
       <i class="fas fa-award"></i> Moment 4: Quiz
     </div>
   </nav>
@@ -916,7 +922,7 @@
 
   // Variables de estado
   let activeTab = 1;
-  let maxTabUnlocked = <?= $progreso['porcentaje'] >= 75 || $progreso['completado'] ? 4 : ($progreso['porcentaje'] >= 50 ? 3 : ($progreso['porcentaje'] >= 25 ? 2 : 1)) ?>;
+  let maxTabUnlocked = <?= (isset($esPreview) && $esPreview) ? 4 : ($progreso['porcentaje'] >= 75 || $progreso['completado'] ? 4 : ($progreso['porcentaje'] >= 50 ? 3 : ($progreso['porcentaje'] >= 25 ? 2 : 1))) ?>;
   let vocabIndex = 0;
   let sessionXp = 0;
 

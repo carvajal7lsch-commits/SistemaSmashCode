@@ -70,7 +70,7 @@
       </a>
     </li>
     <li>
-      <a href="<?= PROYECTO_PATH ?>/admin/raps" class="nav-enlace">
+      <a href="<?= PROYECTO_PATH ?>/admin/raps" class="nav-enlace <?= strpos($_SERVER['REQUEST_URI'] ?? '', '/admin/raps') !== false ? 'activo' : '' ?>">
         <i class="fas fa-file-lines nav-icono"></i><span>RAPs</span>
       </a>
     </li>

@@ -60,6 +60,11 @@ $app->get('/admin/niveles/editar',       'AdminController@editarNivel');
 $app->post('/admin/niveles/actualizar',  'AdminController@actualizarNivel');
 $app->post('/admin/niveles/toggle',      'AdminController@toggleNivel');
 
+// --- Gestión de RAPs (HU03) ---
+$app->get('/admin/raps',                 'AdminController@raps');
+$app->post('/admin/raps/toggle',         'AdminController@toggleRap');
+$app->get('/instructor/raps',            'InstructorController@raps');
+
 // --- Módulo de Niveles (HU10) — Instructor ---
 $app->get('/instructor/niveles',             'InstructorController@niveles');
 $app->get('/instructor/niveles/editar',      'InstructorController@editarNivel');

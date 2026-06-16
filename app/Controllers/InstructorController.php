@@ -123,4 +123,28 @@ class InstructorController extends Controller {
 
         $this->redirect('instructor/niveles?exito=estado');
     }
+
+    /**
+     * Muestra el panel de RAPs para el Instructor (Read-Only) con el estado de sus 5 componentes (HU03).
+     */
+    public function raps(): void {
+        $pdo = obtenerConexion();
+        $stmt = $pdo->query(
+            'SELECT r.id, r.titulo, r.activo AS rap_activo, n.nombre AS nivel_nombre, n.orden AS nivel_orden,
+                    (SELECT COUNT(*) FROM vocabulario v WHERE v.rap_id = r.id AND v.activo = 1) AS total_vocabulario,
+                    (SELECT COUNT(*) FROM vocabulario v WHERE v.rap_id = r.id AND v.activo = 1 AND (v.transcripcion_ipa IS NOT NULL AND v.transcripcion_ipa <> "")) AS total_pronunciacion,
+                    (SELECT COUNT(*) FROM ejercicio e WHERE e.rap_id = r.id AND e.activo = 1) AS total_ejercicios,
+                    (SELECT COUNT(*) FROM dialogo d WHERE d.rap_id = r.id AND d.activo = 1) AS total_dialogos,
+                    (SELECT COUNT(*) FROM quiz q WHERE q.rap_id = r.id AND q.activo = 1) AS tiene_quiz,
+                    (SELECT COUNT(p.id) FROM quiz q JOIN pregunta p ON p.quiz_id = q.id WHERE q.rap_id = r.id AND q.activo = 1) AS total_preguntas_quiz
+             FROM rap r
+             JOIN nivel n ON n.id = r.nivel_id
+             ORDER BY n.orden, r.orden'
+        );
+        $raps = $stmt->fetchAll();
+        $exito = limpiar($_GET['exito'] ?? '');
+        $error = limpiar($_GET['error']  ?? '');
+
+        $this->render('instructor/raps', compact('raps', 'exito', 'error'));
+    }
 }

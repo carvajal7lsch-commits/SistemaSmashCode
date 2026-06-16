@@ -90,11 +90,16 @@ class AprendizController extends Controller {
         }
 
         // Obtener o inicializar progreso
-        $stmtProg = $pdo->prepare('SELECT porcentaje, completado, mejor_puntaje_quiz FROM progreso WHERE usuario_id = ? AND rap_id = ? LIMIT 1');
-        $stmtProg->execute([$uid, $rapId]);
-        $progreso = $stmtProg->fetch() ?: ['porcentaje' => 0.00, 'completado' => 0, 'mejor_puntaje_quiz' => 0.00];
+        $esPreview = in_array(obtenerRolSesion(), ['admin', 'instructor']);
+        if ($esPreview) {
+            $progreso = ['porcentaje' => 100.00, 'completado' => 1, 'mejor_puntaje_quiz' => 100.00];
+        } else {
+            $stmtProg = $pdo->prepare('SELECT porcentaje, completado, mejor_puntaje_quiz FROM progreso WHERE usuario_id = ? AND rap_id = ? LIMIT 1');
+            $stmtProg->execute([$uid, $rapId]);
+            $progreso = $stmtProg->fetch() ?: ['porcentaje' => 0.00, 'completado' => 0, 'mejor_puntaje_quiz' => 0.00];
+        }
 
-        $this->render('aprendiz/rap', compact('rap', 'vocabulario', 'marcados', 'dialogos', 'ejercicios', 'quiz', 'preguntas', 'progreso'));
+        $this->render('aprendiz/rap', compact('rap', 'vocabulario', 'marcados', 'dialogos', 'ejercicios', 'quiz', 'preguntas', 'progreso', 'esPreview'));
     }
 
     public function toggleVocabMarcado(): void {
@@ -134,6 +139,11 @@ class AprendizController extends Controller {
             return;
         }
 
+        if (in_array(obtenerRolSesion(), ['admin', 'instructor'])) {
+            echo json_encode(['exito' => true, 'porcentaje' => $porcentaje, 'preview' => true]);
+            return;
+        }
+
         $progresoModel = new Progreso();
         // Progreso se considera completado si es 100%, pero el completado real de la lección
         // se guarda al aprobar el Quiz. Guardamos el porcentaje alcanzado en esta sesión.
@@ -151,6 +161,18 @@ class AprendizController extends Controller {
 
         if (empty($rapId)) {
             echo json_encode(['exito' => false, 'error' => 'RAP ID no provisto']);
+            return;
+        }
+
+        if (in_array(obtenerRolSesion(), ['admin', 'instructor'])) {
+            echo json_encode([
+                'exito' => true,
+                'puntaje' => 100.00,
+                'aprobado' => true,
+                'xp_ganados' => 0,
+                'insignia_ganada' => 'Vista Previa',
+                'detalles' => []
+            ]);
             return;
         }
 
